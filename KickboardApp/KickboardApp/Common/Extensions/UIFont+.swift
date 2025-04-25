@@ -19,7 +19,13 @@ extension UIFont {
 }
 
 enum FontName: String {
-    case gmarketSansBold = "GmarketSansBold"
-    case gmarketSansMedium = "GmarketSansMedium"
-    case gmarketSansLight = "GmarketSansLight"
+    case pretendardBlack = "Pretendard-Black"
+    case pretendardBold = "Pretendard-Bold"
+    case pretendardExtraBold = "Pretendard-ExtraBold"
+    case pretendardExtraLight = "Pretendard-ExtraLight"
+    case pretendardLight = "Pretendard-Light"
+    case pretendardMedium = "Pretendard-Medium"
+    case pretendardRegular = "Pretendard-Regular"
+    case pretendardSemiBold = "Pretendard-SemiBold"
+    case pretendardThin = "Pretendard-Thin"
 }
