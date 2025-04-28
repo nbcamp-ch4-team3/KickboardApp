@@ -22,9 +22,6 @@ final class LogInView: UIView {
     private let signUpLabel = UILabel()
     private let signUpStackView = UIStackView()
     
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -45,11 +42,7 @@ extension LogInView {
     }
     
     func setHierarchy() {
-        addSubview(scrollView)
-        
-        scrollView.addSubview(contentView)
-        
-        contentView.addSubViews(
+        addSubViews(
             appLogoImageView,
             appNameImageView,
             idTextfield,
@@ -120,24 +113,11 @@ extension LogInView {
             $0.axis = .horizontal
             $0.spacing = 4
         }
-        
-        scrollView.do {
-            $0.showsVerticalScrollIndicator = false
-        }
     }
     
     func setConstraints() {
-        scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        
-        contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalToSuperview()
-        }
-        
         appLogoImageView.snp.makeConstraints {
-            $0.top.equalToSuperview()
+            $0.top.equalToSuperview().offset(80)
             $0.centerX.equalToSuperview()
             $0.height.width.equalTo(150)
         }
@@ -173,7 +153,6 @@ extension LogInView {
         signUpStackView.snp.makeConstraints {
             $0.top.equalTo(logInButton.snp.bottom).offset(10)
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(-40)
         }
     }
 }
