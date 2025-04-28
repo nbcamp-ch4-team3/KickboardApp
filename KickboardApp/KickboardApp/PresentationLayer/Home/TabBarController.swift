@@ -17,8 +17,8 @@ final class TabBarController: UITabBarController {
 
 extension TabBarController {
     func configure() {
-        let mainViewController = ViewController()
-        mainViewController.tabBarItem = UITabBarItem(title: "지도", image: UIImage(systemName: "map"), tag: 0)
+        let homeViewController = ViewController()
+        homeViewController.tabBarItem = UITabBarItem(title: "지도", image: UIImage(systemName: "map"), tag: 0)
         
         let registerViewController = ViewController()
         registerViewController.tabBarItem = UITabBarItem(title: "등록", image: UIImage(systemName: "plus"), tag: 1)
@@ -26,6 +26,6 @@ extension TabBarController {
         let myPageViewController = ViewController()
         myPageViewController.tabBarItem = UITabBarItem(title: "마이페이지", image: UIImage(systemName: "person.circle"), tag: 2)
         
-        viewControllers = [mainViewController, registerViewController, myPageViewController]
+        viewControllers = [homeViewController, registerViewController, myPageViewController]
     }
 }
