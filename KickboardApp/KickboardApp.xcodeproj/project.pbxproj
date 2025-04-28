@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		953A95672DBF698000E745F4 /* NMapsMap in Frameworks */ = {isa = PBXBuildFile; productRef = 953A95662DBF698000E745F4 /* NMapsMap */; };
+		953A956B2DBF6C0100E745F4 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 953A956A2DBF6C0100E745F4 /* Config.xcconfig */; };
 		AD0BD1022DBB5CB700EA6092 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = AD0BD1012DBB5CB700EA6092 /* SnapKit */; };
 		AD0BD1052DBB5CBF00EA6092 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = AD0BD1042DBB5CBF00EA6092 /* Then */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		953A956A2DBF6C0100E745F4 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		AD0BCFDE2DBB585A00EA6092 /* KickboardApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KickboardApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -42,6 +45,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD0BD1022DBB5CB700EA6092 /* SnapKit in Frameworks */,
+				953A95672DBF698000E745F4 /* NMapsMap in Frameworks */,
 				AD0BD1052DBB5CBF00EA6092 /* Then in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -52,6 +56,7 @@
 		AD0BCFD52DBB585A00EA6092 = {
 			isa = PBXGroup;
 			children = (
+				953A956A2DBF6C0100E745F4 /* Config.xcconfig */,
 				AD0BCFE02DBB585A00EA6092 /* KickboardApp */,
 				AD0BCFDF2DBB585A00EA6092 /* Products */,
 			);
@@ -87,6 +92,7 @@
 			packageProductDependencies = (
 				AD0BD1012DBB5CB700EA6092 /* SnapKit */,
 				AD0BD1042DBB5CBF00EA6092 /* Then */,
+				953A95662DBF698000E745F4 /* NMapsMap */,
 			);
 			productName = KickboardApp;
 			productReference = AD0BCFDE2DBB585A00EA6092 /* KickboardApp.app */;
@@ -119,6 +125,7 @@
 			packageReferences = (
 				AD0BD1002DBB5CB700EA6092 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				AD0BD1032DBB5CBF00EA6092 /* XCRemoteSwiftPackageReference "Then" */,
+				953A95652DBF698000E745F4 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD0BCFDF2DBB585A00EA6092 /* Products */;
@@ -135,6 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				953A956B2DBF6C0100E745F4 /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +166,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 63K349422G;
+				DEVELOPMENT_TEAM = R6V7ZUXR5H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KickboardApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -186,7 +194,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 63K349422G;
+				DEVELOPMENT_TEAM = R6V7ZUXR5H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KickboardApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -209,6 +217,7 @@
 		};
 		AD0BCFF42DBB585B00EA6092 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 953A956A2DBF6C0100E745F4 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -272,6 +281,7 @@
 		};
 		AD0BCFF52DBB585B00EA6092 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 953A956A2DBF6C0100E745F4 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -350,6 +360,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		953A95652DBF698000E745F4 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/navermaps/SPM-NMapsMap";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.21.0;
+			};
+		};
 		AD0BD1002DBB5CB700EA6092 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -369,6 +387,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		953A95662DBF698000E745F4 /* NMapsMap */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 953A95652DBF698000E745F4 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */;
+			productName = NMapsMap;
+		};
 		AD0BD1012DBB5CB700EA6092 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AD0BD1002DBB5CB700EA6092 /* XCRemoteSwiftPackageReference "SnapKit" */;
