@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9569F0F32DBBAAF200887D3A /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9569F0F22DBBAAF200887D3A /* Config.xcconfig */; };
-		9569F1F12DBBB72B00887D3A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9569F1F02DBBB72B00887D3A /* SnapKit */; };
-		9569F1F42DBBB73300887D3A /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 9569F1F32DBBB73300887D3A /* Then */; };
-		9569F1F72DBBB74100887D3A /* NMapsMap in Frameworks */ = {isa = PBXBuildFile; productRef = 9569F1F62DBBB74100887D3A /* NMapsMap */; };
+		953A95672DBF698000E745F4 /* NMapsMap in Frameworks */ = {isa = PBXBuildFile; productRef = 953A95662DBF698000E745F4 /* NMapsMap */; };
+		953A956B2DBF6C0100E745F4 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 953A956A2DBF6C0100E745F4 /* Config.xcconfig */; };
+		AD0BD1022DBB5CB700EA6092 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = AD0BD1012DBB5CB700EA6092 /* SnapKit */; };
+		AD0BD1052DBB5CBF00EA6092 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = AD0BD1042DBB5CBF00EA6092 /* Then */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9569F0F22DBBAAF200887D3A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		953A956A2DBF6C0100E745F4 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		AD0BCFDE2DBB585A00EA6092 /* KickboardApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KickboardApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -44,9 +44,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9569F1F12DBBB72B00887D3A /* SnapKit in Frameworks */,
-				9569F1F72DBBB74100887D3A /* NMapsMap in Frameworks */,
-				9569F1F42DBBB73300887D3A /* Then in Frameworks */,
+				AD0BD1022DBB5CB700EA6092 /* SnapKit in Frameworks */,
+				953A95672DBF698000E745F4 /* NMapsMap in Frameworks */,
+				AD0BD1052DBB5CBF00EA6092 /* Then in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,7 +56,7 @@
 		AD0BCFD52DBB585A00EA6092 = {
 			isa = PBXGroup;
 			children = (
-				9569F0F22DBBAAF200887D3A /* Config.xcconfig */,
+				953A956A2DBF6C0100E745F4 /* Config.xcconfig */,
 				AD0BCFE02DBB585A00EA6092 /* KickboardApp */,
 				AD0BCFDF2DBB585A00EA6092 /* Products */,
 			);
@@ -90,9 +90,9 @@
 			);
 			name = KickboardApp;
 			packageProductDependencies = (
-				9569F1F02DBBB72B00887D3A /* SnapKit */,
-				9569F1F32DBBB73300887D3A /* Then */,
-				9569F1F62DBBB74100887D3A /* NMapsMap */,
+				AD0BD1012DBB5CB700EA6092 /* SnapKit */,
+				AD0BD1042DBB5CBF00EA6092 /* Then */,
+				953A95662DBF698000E745F4 /* NMapsMap */,
 			);
 			productName = KickboardApp;
 			productReference = AD0BCFDE2DBB585A00EA6092 /* KickboardApp.app */;
@@ -123,9 +123,9 @@
 			mainGroup = AD0BCFD52DBB585A00EA6092;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				9569F1EF2DBBB72B00887D3A /* XCRemoteSwiftPackageReference "SnapKit" */,
-				9569F1F22DBBB73300887D3A /* XCRemoteSwiftPackageReference "Then" */,
-				9569F1F52DBBB74100887D3A /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */,
+				AD0BD1002DBB5CB700EA6092 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				AD0BD1032DBB5CBF00EA6092 /* XCRemoteSwiftPackageReference "Then" */,
+				953A95652DBF698000E745F4 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD0BCFDF2DBB585A00EA6092 /* Products */;
@@ -142,7 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9569F0F32DBBAAF200887D3A /* Config.xcconfig in Resources */,
+				953A956B2DBF6C0100E745F4 /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +161,6 @@
 /* Begin XCBuildConfiguration section */
 		AD0BCFF22DBB585B00EA6092 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9569F0F22DBBAAF200887D3A /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -190,7 +189,6 @@
 		};
 		AD0BCFF32DBB585B00EA6092 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9569F0F22DBBAAF200887D3A /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -219,7 +217,7 @@
 		};
 		AD0BCFF42DBB585B00EA6092 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9569F0F22DBBAAF200887D3A /* Config.xcconfig */;
+			baseConfigurationReference = 953A956A2DBF6C0100E745F4 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -283,7 +281,7 @@
 		};
 		AD0BCFF52DBB585B00EA6092 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9569F0F22DBBAAF200887D3A /* Config.xcconfig */;
+			baseConfigurationReference = 953A956A2DBF6C0100E745F4 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -362,23 +360,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9569F1EF2DBBB72B00887D3A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.7.1;
-			};
-		};
-		9569F1F22DBBB73300887D3A /* XCRemoteSwiftPackageReference "Then" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/devxoul/Then.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
-		9569F1F52DBBB74100887D3A /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */ = {
+		953A95652DBF698000E745F4 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/navermaps/SPM-NMapsMap";
 			requirement = {
@@ -386,23 +368,39 @@
 				minimumVersion = 3.21.0;
 			};
 		};
+		AD0BD1002DBB5CB700EA6092 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		AD0BD1032DBB5CBF00EA6092 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9569F1F02DBBB72B00887D3A /* SnapKit */ = {
+		953A95662DBF698000E745F4 /* NMapsMap */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9569F1EF2DBBB72B00887D3A /* XCRemoteSwiftPackageReference "SnapKit" */;
+			package = 953A95652DBF698000E745F4 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */;
+			productName = NMapsMap;
+		};
+		AD0BD1012DBB5CB700EA6092 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD0BD1002DBB5CB700EA6092 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
-		9569F1F32DBBB73300887D3A /* Then */ = {
+		AD0BD1042DBB5CBF00EA6092 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9569F1F22DBBB73300887D3A /* XCRemoteSwiftPackageReference "Then" */;
+			package = AD0BD1032DBB5CBF00EA6092 /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
-		};
-		9569F1F62DBBB74100887D3A /* NMapsMap */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9569F1F52DBBB74100887D3A /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */;
-			productName = NMapsMap;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
