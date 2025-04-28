@@ -42,28 +42,28 @@ extension LogInView {
     }
     
     func setHierarchy() {
-        [signUpLabel, signUpButton].forEach {
-            signUpStackView.addArrangedSubview($0)
-        }
+        signUpStackView.addArrangedSubviews(signUpLabel, signUpButton)
         
-        [appLogoImageView,
-         appNameImageView,
-         idTextfield,
-         passwordTextField,
-         logInButton,
-         signUpStackView].forEach { addSubview($0) }
+        addSubViews(
+            appLogoImageView,
+            appNameImageView,
+            idTextfield,
+            passwordTextField,
+            logInButton,
+            signUpStackView
+        )
     }
     
     func setStyle() {
         backgroundColor = .white
         
         appLogoImageView.do {
-            $0.image = UIImage(systemName: "person.circle")
+            $0.image = UIImage(named: "logo")
             $0.contentMode = .scaleAspectFit
         }
         
         appNameImageView.do {
-            $0.image = UIImage(systemName: "person.circle")
+            $0.image = UIImage(named: "textLogo")
             $0.contentMode = .scaleAspectFit
         }
         
@@ -75,6 +75,7 @@ extension LogInView {
             $0.placeholder = "아이디"
             $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
             $0.leftViewMode = .always
+            $0.font = .font(.pretendardRegular, ofSize: 18)
         }
         
         passwordTextField.do {
@@ -85,26 +86,27 @@ extension LogInView {
             $0.placeholder = "비밀번호"
             $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
             $0.leftViewMode = .always
+            $0.font = .font(.pretendardRegular, ofSize: 18)
         }
         
         logInButton.do {
             $0.setTitle("로그인", for: .normal)
-            $0.backgroundColor = .orange
+            $0.backgroundColor = .primary
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 25
             $0.setTitleColor(.white, for: .normal)
-            $0.titleLabel?.font = .systemFont(ofSize: 18)
+            $0.titleLabel?.font = .font(.pretendardBold, ofSize: 18)
         }
         
         signUpLabel.do {
             $0.text = "회원이 아니신가요?"
-            $0.font = .systemFont(ofSize: 12)
+            $0.font = .font(.pretendardRegular, ofSize: 12)
         }
         
         signUpButton.do {
             $0.setTitle("회원가입", for: .normal)
-            $0.setTitleColor(.orange, for: .normal)
-            $0.titleLabel?.font = .systemFont(ofSize: 12)
+            $0.setTitleColor(.primary, for: .normal)
+            $0.titleLabel?.font = .font(.pretendardRegular, ofSize: 12)
         }
         
         signUpStackView.do {
@@ -115,20 +117,20 @@ extension LogInView {
     
     func setConstraints() {
         appLogoImageView.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(40)
+            $0.top.equalToSuperview().offset(80)
             $0.centerX.equalToSuperview()
-            $0.height.width.equalTo(100)
+            $0.height.width.equalTo(150)
         }
         
         appNameImageView.snp.makeConstraints {
-            $0.top.equalTo(appLogoImageView.snp.bottom).offset(10)
+            $0.top.equalTo(appLogoImageView.snp.bottom)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(30)
             $0.width.equalTo(200)
         }
         
         idTextfield.snp.makeConstraints {
-            $0.top.equalTo(appNameImageView.snp.bottom).offset(30)
+            $0.top.equalTo(appNameImageView.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(300)
             $0.height.equalTo(50)
