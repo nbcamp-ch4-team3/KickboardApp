@@ -23,7 +23,6 @@ final class RegisterViewController: UIViewController {
     }
 
     private func setProtocol() {
-//        registerView.setBrandCollectionView(delegate: self, dataSource: self)
         registerView.setKickboardSettingViewDelegate(self)
     }
 }
