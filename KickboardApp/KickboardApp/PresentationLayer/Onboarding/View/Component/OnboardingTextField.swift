@@ -1,5 +1,5 @@
 //
-//  LogInTextField.swift
+//  OnboardingTextField.swift
 //  KickboardApp
 //
 //  Created by 권순욱 on 4/29/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LogInTextField: UITextField {
+class OnboardingTextField: UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
