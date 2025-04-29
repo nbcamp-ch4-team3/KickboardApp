@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="23G93" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="BrandEntity" representedClassName="BrandEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="distancePerBatteryUnit" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="imageName" attributeType="String"/>
+        <attribute name="pricePerMinute" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="kickboard" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="KickboardEntity" inverseName="brand" inverseEntity="KickboardEntity"/>
+    </entity>
     <entity name="KickboardEntity" representedClassName="KickboardEntity" syncable="YES" codeGenerationType="class">
         <attribute name="battery" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isAvailable" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="type" attributeType="String"/>
+        <relationship name="brand" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BrandEntity" inverseName="kickboard" inverseEntity="BrandEntity"/>
     </entity>
 </model>
