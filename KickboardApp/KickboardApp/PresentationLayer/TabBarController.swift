@@ -17,7 +17,7 @@ final class TabBarController: UITabBarController {
 
 extension TabBarController {
     func configure() {
-        let homeViewController = ViewController()
+        let homeViewController = HomeViewController()
         homeViewController.tabBarItem = UITabBarItem(title: "지도", image: UIImage(systemName: "map"), tag: 0)
         
         let registerViewController = ViewController()
