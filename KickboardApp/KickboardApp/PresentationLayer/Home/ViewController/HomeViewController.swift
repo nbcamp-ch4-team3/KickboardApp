@@ -57,7 +57,11 @@ private extension HomeViewController {
     }
 
     func showRequestLocationServiceAlert() {
-        let requestLocationServiceAlert = UIAlertController(title: "위치 정보 이용", message: "위치 서비스를 사용할 수 없습니다.\n디바이스의 '설정 > 개인정보 보호'에서 위치 서비스를 켜주세요.", preferredStyle: .alert)
+        let requestLocationServiceAlert = UIAlertController(
+            title: "위치 정보 이용",
+            message: "위치 서비스를 사용할 수 없습니다.\n디바이스의 '설정 > 개인정보 보호'에서 위치 서비스를 켜주세요.",
+            preferredStyle: .alert
+        )
         let moveToSetting = UIAlertAction(title: "설정으로 이동", style: .destructive) { _ in
             // TODO: - 앱 설정 맨 첫 페이지로 이동하는 방법 찾아야함. 앱 scheme,
             if let appSetting = URL(string: UIApplication.openSettingsURLString) {

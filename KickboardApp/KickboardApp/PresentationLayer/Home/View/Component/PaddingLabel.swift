@@ -8,7 +8,20 @@
 import UIKit
 
 class PaddingLabel: UILabel {
-    var inset = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+    var inset = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8) // 기본 값
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    init(inset: UIEdgeInsets) {
+        self.inset = inset
+        super.init(frame: .zero)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented.")
+    }
 
     override func drawText(in rect: CGRect) {
         super.drawText(in: rect.inset(by: inset))

@@ -18,7 +18,22 @@ class HomeBottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        homeBottomSheetView.configure(with: Kickboard(id: UUID(), latitude: 31.123412, longitude: 125.123412, battery: 75, isAvailable: true, brand: Brand(title: "SWING", imageName: "logo", distancePerBatteryUnit: 4, pricePerMinute: 180)))
+        homeBottomSheetView
+            .configure(
+                with: Kickboard(
+                    id: UUID(),
+                    latitude: 31.123412,
+                    longitude: 125.123412,
+                    battery: 75,
+                    isAvailable: true,
+                    brand: Brand(
+                        title: "SWING",
+                        imageName: "logo",
+                        distancePerBatteryUnit: 4,
+                        pricePerMinute: 180
+                    )
+                )
+            )
     }
     
 }
