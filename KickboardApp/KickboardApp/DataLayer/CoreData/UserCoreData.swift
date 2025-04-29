@@ -10,6 +10,7 @@ import CoreData
 protocol UserCoreDataProtocol {
     func isExistUser(_ id: String) throws -> Bool
     func validatePassword(_ password: String, for id: String) throws -> Bool
+    func findUser() throws -> UserEntity?
 }
 
 final class UserCoreData: UserCoreDataProtocol {

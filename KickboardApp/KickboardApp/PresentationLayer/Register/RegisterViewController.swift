@@ -43,7 +43,15 @@ final class RegisterViewController: UIViewController {
 
 extension RegisterViewController: KickboardSettingViewDelegate {
     func didTapRegisterButton(latitude: Double, longitude: Double, brand: Brand, battery: Int) {
-        print("latitude: \(latitude), longitude: \(longitude), brand: \(brand), battery: \(battery)")
+        let kickboard = Kickboard(
+            id: UUID(),
+            latitude: latitude,
+            longitude: longitude,
+            battery: battery,
+            isAvailable: true,
+            brand: brand
+        )
+        viewModel.action?(.saveKickboard(kickboard))
     }
 }
 
@@ -55,10 +63,15 @@ extension RegisterViewController: NMFMapViewCameraDelegate {
 }
 
 extension RegisterViewController: RegisterViewModelDelegate {
+    
     func didGetAllBrand(_ brands: [Brand]) {
         registerView.setDataSource(brands: brands)
     }
-    
+
+    func didSaveKickboard() {
+        self.showAlert(title: "등록 성공", message: "킥보드가 등록되었습니다.")
+    }
+
     func didFailWithError(_ error: AppError) {
         self.showErrorAlert(error: error)
     }

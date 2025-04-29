@@ -8,5 +8,5 @@
 import Foundation
 
 protocol KickboardRepositoryProtocol {
-    func saveKickboard(user: User, with kickboard: Kickboard) throws -> Void
+    func saveKickboard(with kickboard: Kickboard) throws -> Void
 }

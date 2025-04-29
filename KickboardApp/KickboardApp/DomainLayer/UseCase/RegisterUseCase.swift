@@ -15,16 +15,13 @@ protocol RegisterUseCaseProtocol {
 final class RegisterUseCase: RegisterUseCaseProtocol {
     private let brandRepository: BrandRepositoryProtocol
     private let kickboardRepository: KickboardRepositoryProtocol
-    private let userRepository: UserRepositoryProtocol
 
     init(
         brandRepository: BrandRepositoryProtocol,
-        kickboardRepository: KickboardRepositoryProtocol,
-        userRepository: UserRepositoryProtocol
+        kickboardRepository: KickboardRepositoryProtocol
     ) {
         self.brandRepository = brandRepository
         self.kickboardRepository = kickboardRepository
-        self.userRepository = userRepository
     }
 
     func getAllBrand() throws -> [Brand] {
@@ -32,7 +29,6 @@ final class RegisterUseCase: RegisterUseCaseProtocol {
     }
 
     func saveKickboard(with kickboard: Kickboard) throws -> Void {
-        let user = try userRepository.readMyUserInfo()
-        try kickboardRepository.saveKickboard(user: user, with: kickboard)
+        try kickboardRepository.saveKickboard(with: kickboard)
     }
 }

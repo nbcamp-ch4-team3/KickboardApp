@@ -8,13 +8,33 @@
 import Foundation
 
 final class KickboardRepository: KickboardRepositoryProtocol {
-    private let coreData: KickboardCoreDataProtocol
+    private let kickboardCoreData: KickboardCoreDataProtocol
+    private let userCoreData: UserCoreDataProtocol
+    private let brandCoreData: BrandCoreDataProtocol
 
-    init(coreData: KickboardCoreDataProtocol) {
-        self.coreData = coreData
+    init(
+        kickboardCoreData: KickboardCoreDataProtocol,
+        userCoreData: UserCoreDataProtocol,
+        brandCoreData: BrandCoreDataProtocol
+    ) {
+        self.kickboardCoreData = kickboardCoreData
+        self.userCoreData = userCoreData
+        self.brandCoreData = brandCoreData
     }
 
-    func saveKickboard(user: User, with kickboard: Kickboard) throws {
-        try coreData.saveData(user: user, with: kickboard)
+    func saveKickboard(with kickboard: Kickboard) throws {
+        guard let userEntity = try userCoreData.findUser() else {
+            throw CoreDataError.notFound("User")
+        }
+
+        guard let brandEntity = try brandCoreData.findBrand(with: kickboard.brand.title) else {
+            throw CoreDataError.notFound("Brand")
+        }
+
+        try kickboardCoreData.saveData(
+            user: userEntity,
+            brand: brandEntity,
+            with: kickboard
+        )
     }
 }

@@ -15,8 +15,9 @@ final class UserRepository: UserRepositoryProtocol {
     }
 
     func readMyUserInfo() throws -> User {
-        let entity = try coreData.readMyUserInfo()
-        guard let id = entity.id,
+
+        guard let entity = try coreData.findUser(),
+              let id = entity.id,
               let password = entity.password,
               let nickname = entity.nickname
         else {

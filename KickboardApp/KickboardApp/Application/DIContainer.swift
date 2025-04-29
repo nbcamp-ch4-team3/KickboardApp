@@ -14,16 +14,23 @@ struct DIContainer {
     private let userRepository: UserRepositoryProtocol
 
     init() {
-        brandRepository = BrandRepository(coreData: BrandCoreData())
-        kickboardRepository = KickboardRepository(coreData: KickboardCoreData())
-        userRepository = UserRepository(coreData: UserCoreData())
+        let brandCoreData = BrandCoreData()
+        let kickboardCoreData = KickboardCoreData()
+        let userCoreData = UserCoreData()
+
+        brandRepository = BrandRepository(coreData:brandCoreData)
+        kickboardRepository = KickboardRepository(
+            kickboardCoreData: kickboardCoreData,
+            userCoreData: userCoreData,
+            brandCoreData: brandCoreData
+        )
+        userRepository = UserRepository(coreData:userCoreData)
     }
 
     func makeRegisterViewController() -> RegisterViewController {
         let useCase = RegisterUseCase(
             brandRepository: brandRepository,
-            kickboardRepository: kickboardRepository,
-            userRepository: userRepository
+            kickboardRepository: kickboardRepository
         )
         let viewModel = RegisterViewModel(useCase: useCase)
         return RegisterViewController(viewModel: viewModel)
