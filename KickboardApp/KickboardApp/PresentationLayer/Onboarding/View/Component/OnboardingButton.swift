@@ -7,7 +7,7 @@
 
 import UIKit
 
-class OnboardingButton: UIButton {
+final class OnboardingButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         

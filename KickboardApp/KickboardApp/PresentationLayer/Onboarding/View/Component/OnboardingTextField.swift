@@ -7,7 +7,7 @@
 
 import UIKit
 
-class OnboardingTextField: UITextField {
+final class OnboardingTextField: UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
