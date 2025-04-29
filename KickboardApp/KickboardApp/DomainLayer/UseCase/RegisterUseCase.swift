@@ -9,16 +9,30 @@ import Foundation
 
 protocol RegisterUseCaseProtocol {
     func getAllBrand() throws -> [Brand]
+    func saveKickboard(with kickboard: Kickboard) throws -> Void
 }
 
 final class RegisterUseCase: RegisterUseCaseProtocol {
-    private let repository: BrandRepositoryProtocol
+    private let brandRepository: BrandRepositoryProtocol
+    private let kickboardRepository: KickboardRepositoryProtocol
+    private let userRepository: UserRepositoryProtocol
 
-    init(repository: BrandRepositoryProtocol) {
-        self.repository = repository
+    init(
+        brandRepository: BrandRepositoryProtocol,
+        kickboardRepository: KickboardRepositoryProtocol,
+        userRepository: UserRepositoryProtocol
+    ) {
+        self.brandRepository = brandRepository
+        self.kickboardRepository = kickboardRepository
+        self.userRepository = userRepository
     }
 
     func getAllBrand() throws -> [Brand] {
-        try repository.getAllBrand()
+        try brandRepository.getAllBrand()
+    }
+
+    func saveKickboard(with kickboard: Kickboard) throws -> Void {
+        let user = try userRepository.readMyUserInfo()
+        try kickboardRepository.saveKickboard(user: user, with: kickboard)
     }
 }
