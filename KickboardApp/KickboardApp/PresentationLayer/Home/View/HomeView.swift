@@ -16,7 +16,7 @@ final class HomeView: UIView {
     weak var delegate: HomeViewDelegate?
 
     private let searchTextField = UITextField()
-    private let mapView = NMFMapView()
+    private let naverMapView = NMFNaverMapView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -71,11 +71,11 @@ private extension HomeView {
     }
 
     func setHierarchy() {
-        addSubViews(mapView, searchTextField)
+        addSubViews(naverMapView, searchTextField)
     }
 
     func setConstraints() {
-        mapView.snp.makeConstraints {
+        naverMapView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
 
@@ -96,8 +96,15 @@ private extension HomeView {
 }
 
 extension HomeView {
-    func moveCamera(to update: NMFCameraUpdate) {
-        mapView.moveCamera(update)
+    func moveCamera(to update: NMGLatLng) {
+        let cameraUpdate = NMFCameraUpdate(scrollTo: update)
+        cameraUpdate.animation = .easeIn
+
+        let locationOverlay = naverMapView.mapView.locationOverlay
+        locationOverlay.location = update
+        locationOverlay.hidden = false
+        
+        naverMapView.mapView.moveCamera(cameraUpdate)
     }
 }
 

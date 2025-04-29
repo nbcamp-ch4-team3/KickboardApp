@@ -85,11 +85,10 @@ private extension HomeViewController {
     }
 
     func updateToCurrentPosition() {
-        let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(
+        let cameraUpdate = NMGLatLng(
             lat: locationManager.location?.coordinate.latitude ?? 0,
             lng: locationManager.location?.coordinate.longitude ?? 0
-        ))
-        cameraUpdate.animation = .easeIn
+        )
         DispatchQueue.main.async {
             self.homeView.moveCamera(to: cameraUpdate)
         }
