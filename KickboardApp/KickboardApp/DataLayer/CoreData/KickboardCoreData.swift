@@ -9,7 +9,7 @@ import CoreData
 
 protocol KickboardCoreDataProtocol {
     func saveData(with data: Kickboard) throws
-    func readAllData() throws -> [Kickboard]
+    func readAllData() throws -> [KickboardEntity]
     func updateLocation(id: UUID, latitude: Double, longitude: Double) throws
     func deleteAllData() throws
 }
@@ -24,11 +24,17 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
     func saveData(with data: Kickboard) throws {
         let object = KickboardEntity(context: viewContext)
         object.id = data.id
-        object.type = data.type.rawValue
         object.battery = Int64(data.battery)
         object.isAvailable = data.isAvailable
         object.latitude = data.latitude
         object.longitude = data.longitude
+
+        let brandEntity = BrandEntity(context: viewContext)
+        brandEntity.title = data.brand.title
+        brandEntity.imageName = data.brand.imageName
+        brandEntity.distancePerBatteryUnit = data.brand.distancePerBatteryUnit
+        brandEntity.pricePerMinute = Int64(data.brand.pricePerMinute)
+        object.brand = brandEntity
 
         do {
             try viewContext.save()
@@ -38,19 +44,9 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
     }
 
     //TODO: latitude, longitude, 지도의 범위를 받아서 필터링
-    func readAllData() throws -> [Kickboard] {
+    func readAllData() throws -> [KickboardEntity] {
         do {
             return try viewContext.fetch(KickboardEntity.fetchRequest())
-                .map {
-                    Kickboard(
-                        id: $0.id ?? UUID(),
-                        latitude: $0.latitude,
-                        longitude: $0.longitude,
-                        battery: Int($0.battery),
-                        isAvailable: $0.isAvailable,
-                        typeString: $0.type ?? KickboardType.typeA.rawValue
-                    )
-                }
         } catch {
             throw CoreDataError.readError(error)
         }
