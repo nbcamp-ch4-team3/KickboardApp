@@ -34,4 +34,5 @@ extension UIColor {
     static let gray2 = UIColor(hex: "#636870")
     static let gray3 = UIColor(hex: "#C7C7C7")
     static let gray4 = UIColor(hex: "#ECECEC")
+    static let customRed = UIColor(hex: "E73322")
 }
