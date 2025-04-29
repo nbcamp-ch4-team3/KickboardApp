@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import NMapsMap
 
 final class RegisterView: UIView {
 
     private let titleView = RegisterTitleView()
-    private let mapView = UIView()
-
+    private let mapView = NMFMapView()
+    private let mapPinView = RegisterMapPinView()
     private let settingView = KickboardSettingView()
 
 
@@ -37,7 +38,7 @@ private extension RegisterView {
     }
 
     func setHierarchy() {
-        addSubViews(titleView, mapView, settingView)
+        addSubViews(titleView, mapView, mapPinView, settingView)
     }
 
     func setStyle() {
@@ -63,8 +64,12 @@ private extension RegisterView {
 
         mapView.snp.makeConstraints { make in
             make.top.equalTo(titleView.snp.bottom).offset(12)
-            make.bottom.equalTo(safeAreaLayoutGuide)
+            make.bottom.equalTo(settingView.snp.top)
             make.directionalHorizontalEdges.equalToSuperview()
+        }
+
+        mapPinView.snp.makeConstraints { make in
+            make.center.equalTo(mapView)
         }
 
         settingView.snp.makeConstraints { make in
