@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import NMapsMap
 
 protocol KickboardSettingViewDelegate: AnyObject {
     func didTapRegisterButton(latitude: Double, longitude: Double, brand: Brand, battery: Int)
@@ -57,6 +58,11 @@ final class KickboardSettingView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    func configure(location: NMGLatLng) {
+        latitudeValueLabel.text = location.lat.formatted(toDecimalDigits: 4)
+        longitudeValueLabel.text = location.lng.formatted(toDecimalDigits: 4)
+    }
 }
 
 private extension KickboardSettingView {
@@ -105,9 +111,10 @@ private extension KickboardSettingView {
         }
 
         latitudeValueLabel.do {
-            $0.backgroundColor = .gray2
+            $0.backgroundColor = .gray4
             $0.textAlignment = .center
             $0.text = "위도 값"
+            $0.textColor = .black2
             $0.font = .font(.pretendardMedium, ofSize: 14)
         }
 
@@ -124,9 +131,10 @@ private extension KickboardSettingView {
         }
 
         longitudeValueLabel.do {
-            $0.backgroundColor = .gray2
+            $0.backgroundColor = .gray4
             $0.textAlignment = .center
             $0.text = "경도 값"
+            $0.textColor = .black2
             $0.font = .font(.pretendardMedium, ofSize: 14)
         }
 

@@ -15,7 +15,6 @@ final class RegisterView: UIView {
     private let mapPinView = RegisterMapPinView()
     private let settingView = KickboardSettingView()
 
-
     init() {
         super.init(frame: .zero)
         configure()
@@ -27,6 +26,14 @@ final class RegisterView: UIView {
 
     func setKickboardSettingViewDelegate(_ delegate: KickboardSettingViewDelegate) {
         settingView.delegate = delegate
+    }
+
+    func setCameraDelegate(_ delegate: NMFMapViewCameraDelegate) {
+        mapView.addCameraDelegate(delegate: delegate)
+    }
+
+    func configure(location: NMGLatLng) {
+        settingView.configure(location: location)
     }
 }
 
