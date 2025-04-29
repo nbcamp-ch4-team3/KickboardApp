@@ -14,5 +14,23 @@
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="brand" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BrandEntity" inverseName="kickboard" inverseEntity="BrandEntity"/>
+        <relationship name="rideHistory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RideHistoryEntity" inverseName="kickboard" inverseEntity="RideHistoryEntity"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="kickboard" inverseEntity="UserEntity"/>
+    </entity>
+    <entity name="RideHistoryEntity" representedClassName="RideHistoryEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="endTime" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="price" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startTime" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="kickboard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="KickboardEntity" inverseName="rideHistory" inverseEntity="KickboardEntity"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="rideHistory" inverseEntity="UserEntity"/>
+    </entity>
+    <entity name="UserEntity" representedClassName="UserEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String"/>
+        <attribute name="nickname" attributeType="String"/>
+        <attribute name="password" attributeType="String"/>
+        <relationship name="kickboard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="KickboardEntity" inverseName="user" inverseEntity="KickboardEntity"/>
+        <relationship name="rideHistory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RideHistoryEntity" inverseName="user" inverseEntity="RideHistoryEntity"/>
     </entity>
 </model>
