@@ -10,8 +10,9 @@ import NMapsMap
 import CoreLocation
 import FittedSheets
 
-class HomeViewController: UIViewController {
+final class HomeViewController: UIViewController {
     private let homeView = HomeView()
+    private let homeViewModel: HomeViewModelProtocol = HomeViewModel()
     let locationManager = CLLocationManager()
 
     override func loadView() {
@@ -23,6 +24,8 @@ class HomeViewController: UIViewController {
 
         locationManager.delegate = self
         homeView.delegate = self
+
+        homeViewModel.generateMockKickboards()
     }
 
 
@@ -100,7 +103,11 @@ private extension HomeViewController {
 
 extension HomeViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-
+        guard let currentLocation = locations.last else { print("마지막 위치 정보 없음"); return }
+        let filteredKickboards = homeViewModel.nearbyKickboards(from: currentLocation, within: 300)
+        DispatchQueue.main.async {
+            self.homeView.updateKickboardMarkers(with: filteredKickboards)
+        }
     }
 
 
@@ -113,9 +120,10 @@ extension HomeViewController: CLLocationManagerDelegate {
 }
 
 extension HomeViewController: HomeViewDelegate {
-    func didTapMarker() {
-        print("didTapKickboard")
+    func didTapMarker(with kickboard: Kickboard) {
         let vc = HomeBottomSheetViewController()
+        vc.kickboard = kickboard
+
         var options = SheetOptions()
         // 라이브러리 기본 옵션을 취소하는 설정들
         options.shrinkPresentingViewController = false

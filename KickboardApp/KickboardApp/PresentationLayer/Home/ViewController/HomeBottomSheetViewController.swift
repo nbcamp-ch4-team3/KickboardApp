@@ -7,9 +7,10 @@
 
 import UIKit
 
-class HomeBottomSheetViewController: UIViewController {
-
+final class HomeBottomSheetViewController: UIViewController {
     private let homeBottomSheetView = HomeBottomSheetView()
+
+    var kickboard: Kickboard?
 
     override func loadView() {
         view = homeBottomSheetView
@@ -20,7 +21,7 @@ class HomeBottomSheetViewController: UIViewController {
 
         homeBottomSheetView
             .configure(
-                with: Kickboard(
+                with: kickboard ?? Kickboard(
                     id: UUID(),
                     latitude: 31.123412,
                     longitude: 125.123412,
@@ -35,5 +36,5 @@ class HomeBottomSheetViewController: UIViewController {
                 )
             )
     }
-    
+
 }

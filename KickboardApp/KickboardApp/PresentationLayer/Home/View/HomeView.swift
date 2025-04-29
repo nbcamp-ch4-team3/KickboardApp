@@ -9,11 +9,12 @@ import UIKit
 import NMapsMap
 
 protocol HomeViewDelegate: AnyObject {
-    func didTapMarker()
+    func didTapMarker(with kickboard: Kickboard)
 }
 
 final class HomeView: UIView {
     weak var delegate: HomeViewDelegate?
+    private var markers: [NMFMarker] = []
 
     private let searchTextField = UITextField()
     private let naverMapView = NMFNaverMapView()
@@ -66,7 +67,6 @@ private extension HomeView {
             $0.rightViewMode = .always
             $0.rightView = rightButton
 
-            rightButton.addTarget(self, action: #selector(didTapMarker), for: .touchUpInside)
         }
     }
 
@@ -89,10 +89,6 @@ private extension HomeView {
     func setAction() {
 
     }
-
-    @objc private func didTapMarker() {
-        delegate?.didTapMarker()
-    }
 }
 
 extension HomeView {
@@ -106,5 +102,24 @@ extension HomeView {
         
         naverMapView.mapView.moveCamera(cameraUpdate)
     }
-}
 
+    func updateKickboardMarkers(with: [Kickboard]) {
+        markers.removeAll()
+
+        with.forEach { kickboard in
+            let marker = NMFMarker()
+            marker.position = NMGLatLng(lat: kickboard.latitude, lng: kickboard.longitude)
+            marker.mapView = naverMapView.mapView
+            marker.width = 20
+            marker.height = 35
+            marker.touchHandler = { [weak self] (overlay: NMFOverlay) -> Bool in
+                guard let self else { return false }
+                
+                self.delegate?.didTapMarker(with: kickboard)
+
+                return true
+            }
+            markers.append(marker)
+        }
+    }
+}
