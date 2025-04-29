@@ -13,8 +13,8 @@ final class LogInView: UIView {
     let logInButton = OnboardingButton(type: .logIn)
     let signUpButton = UIButton()
     
-    private let idTextfield = OnboardingTextField(type: .logInId)
-    private let passwordTextField = OnboardingTextField(type: .logInPassword)
+    let idTextfield = OnboardingTextField(type: .logInId)
+    let passwordTextField = OnboardingTextField(type: .logInPassword)
     
     private let appLogoImageView = UIImageView()
     private let appNameImageView = UIImageView()

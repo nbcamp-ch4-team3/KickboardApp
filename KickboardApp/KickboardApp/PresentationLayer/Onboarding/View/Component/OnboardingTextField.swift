@@ -27,6 +27,15 @@ enum OnboardingTextFieldType {
             "닉네임"
         }
     }
+    
+    var isSecureTextEntry: Bool {
+        switch self {
+        case .logInPassword, .signUpPassword, .signUpConfirmPassword:
+            true
+        default:
+            false
+        }
+    }
 }
 
 final class OnboardingTextField: UITextField {
@@ -44,6 +53,9 @@ final class OnboardingTextField: UITextField {
         leftViewMode = .always
         font = .font(.pretendardRegular, ofSize: 18)
         placeholder = type.placeholder
+        isSecureTextEntry = type.isSecureTextEntry
+        autocorrectionType = .no
+        autocapitalizationType = .none
     }
     
     required init?(coder: NSCoder) {
