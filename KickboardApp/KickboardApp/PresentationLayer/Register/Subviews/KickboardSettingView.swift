@@ -15,8 +15,13 @@ protocol KickboardSettingViewDelegate: AnyObject {
 }
 
 final class KickboardSettingView: UIView {
-    private let dataSource = Brand.mockData()
-    private var selectedBrand: Brand?
+    private var dataSource = [Brand]()
+    private var selectedBrand: Brand? {
+        didSet {
+            registerButton.isEnabled = true
+            registerButton.backgroundColor = .primary
+        }
+    }
     private var selectedBatteryUnit: Int = 100
 
     weak var delegate: KickboardSettingViewDelegate?
@@ -57,6 +62,11 @@ final class KickboardSettingView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func setDataSource(brands: [Brand]) {
+        self.dataSource = brands
+        brandCollectionView.reloadData()
     }
 
     func configure(location: NMGLatLng) {
@@ -183,8 +193,10 @@ private extension KickboardSettingView {
             $0.setTitle("등록하기", for: .normal)
             $0.titleLabel?.font = .font(.pretendardSemiBold, ofSize: 16)
             $0.setTitleColor(.white, for: .normal)
-            $0.backgroundColor = .primary
+            $0.isEnabled = false
+            $0.backgroundColor = .gray3
             $0.layer.cornerRadius = 10
+
         }
     }
 
@@ -248,7 +260,7 @@ private extension KickboardSettingView {
 // MARK: UICollectionViewDataSource
 extension KickboardSettingView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataSource.count * 2
+        dataSource.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -256,7 +268,7 @@ extension KickboardSettingView: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        cell.configure(with: dataSource[indexPath.item % dataSource.count])
+        cell.configure(with: dataSource[indexPath.item])
         return cell
     }
 }
@@ -264,7 +276,7 @@ extension KickboardSettingView: UICollectionViewDataSource {
 // MARK: UICollectionViewDelegate
 extension KickboardSettingView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.selectedBrand = dataSource[indexPath.item % dataSource.count]
+        self.selectedBrand = dataSource[indexPath.item]
     }
 }
 
