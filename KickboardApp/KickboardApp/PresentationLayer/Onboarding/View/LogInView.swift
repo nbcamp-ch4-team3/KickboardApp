@@ -10,11 +10,11 @@ import SnapKit
 import Then
 
 final class LogInView: UIView {
-    let logInButton = UIButton()
+    let logInButton = OnboardingButton()
     let signUpButton = UIButton()
     
-    private let idTextfield = UITextField()
-    private let passwordTextField = UITextField()
+    private let idTextfield = OnboardingTextField()
+    private let passwordTextField = OnboardingTextField()
     
     private let appLogoImageView = UIImageView()
     private let appNameImageView = UIImageView()
@@ -68,34 +68,15 @@ extension LogInView {
         }
         
         idTextfield.do {
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 25
-            $0.layer.borderWidth = 1
-            $0.layer.borderColor = UIColor.lightGray.cgColor
             $0.placeholder = "아이디"
-            $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
-            $0.leftViewMode = .always
-            $0.font = .font(.pretendardRegular, ofSize: 18)
         }
         
         passwordTextField.do {
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 25
-            $0.layer.borderWidth = 1
-            $0.layer.borderColor = UIColor.lightGray.cgColor
             $0.placeholder = "비밀번호"
-            $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
-            $0.leftViewMode = .always
-            $0.font = .font(.pretendardRegular, ofSize: 18)
         }
         
         logInButton.do {
             $0.setTitle("로그인", for: .normal)
-            $0.backgroundColor = .primary
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 25
-            $0.setTitleColor(.white, for: .normal)
-            $0.titleLabel?.font = .font(.pretendardBold, ofSize: 18)
         }
         
         signUpLabel.do {
@@ -133,21 +114,21 @@ extension LogInView {
             $0.top.equalTo(appNameImageView.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(300)
-            $0.height.equalTo(50)
+            $0.height.equalTo(48)
         }
         
         passwordTextField.snp.makeConstraints {
             $0.top.equalTo(idTextfield.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(300)
-            $0.height.equalTo(50)
+            $0.height.equalTo(48)
         }
         
         logInButton.snp.makeConstraints {
             $0.top.equalTo(passwordTextField.snp.bottom).offset(30)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(300)
-            $0.height.equalTo(50)
+            $0.height.equalTo(48)
         }
         
         signUpStackView.snp.makeConstraints {
