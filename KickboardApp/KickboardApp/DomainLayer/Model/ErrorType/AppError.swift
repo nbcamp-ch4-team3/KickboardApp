@@ -7,15 +7,23 @@
 
 import Foundation
 
-enum AppError: LocalizedError {
+protocol AppErrorProtocol: LocalizedError {
+    var errorDescription: String? { get }
+    var debugDescription: String { get }
+}
+
+enum AppError: AppErrorProtocol {
     case networkError(Error)
     case coreDataError(CoreDataError)
+    case userDefaultsError(UserDefaultsError)
     case unKnown(Error)
 
     init(_ error: Error) {
         switch error {
         case let error as CoreDataError:
             self = .coreDataError(error)
+        case let error as UserDefaultsError:
+            self = .userDefaultsError(error)
         default:
             self = .unKnown(error)
         }
@@ -23,8 +31,10 @@ enum AppError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .coreDataError(let coreDataError):
-            coreDataError.errorDescription
+        case .coreDataError(let error):
+            error.errorDescription
+        case .userDefaultsError(let error):
+            error.errorDescription
         default:
             "알 수 없는 오류가 발생했습니다."
         }
@@ -32,8 +42,10 @@ enum AppError: LocalizedError {
 
     var debugDescription: String {
         switch self {
-        case .coreDataError(let coreDataError):
-            coreDataError.debugDescription
+        case .coreDataError(let error):
+            error.debugDescription
+        case .userDefaultsError(let error):
+            error.debugDescription
         default:
             self.localizedDescription
         }
