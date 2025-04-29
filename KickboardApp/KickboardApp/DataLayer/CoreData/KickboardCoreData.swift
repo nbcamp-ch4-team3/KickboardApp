@@ -8,7 +8,7 @@
 import CoreData
 
 protocol KickboardCoreDataProtocol {
-    func saveData(with data: Kickboard) throws
+    func saveData(user: User, with data: Kickboard) throws
     func readAllData() throws -> [KickboardEntity]
     func updateLocation(id: UUID, latitude: Double, longitude: Double) throws
     func deleteAllData() throws
@@ -21,7 +21,7 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
         self.viewContext = CoreDataStorage.shared.persistentContainer.viewContext
     }
 
-    func saveData(with data: Kickboard) throws {
+    func saveData(user: User, with data: Kickboard) throws {
         let object = KickboardEntity(context: viewContext)
         object.id = data.id
         object.battery = Int64(data.battery)
@@ -35,6 +35,12 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
         brandEntity.distancePerBatteryUnit = data.brand.distancePerBatteryUnit
         brandEntity.pricePerMinute = Int64(data.brand.pricePerMinute)
         object.brand = brandEntity
+
+        let userEntity = UserEntity(context: viewContext)
+        userEntity.id = user.id
+        userEntity.nickname = user.nickname
+        userEntity.password = user.password
+        object.user = userEntity
 
         do {
             try viewContext.save()
@@ -67,7 +73,6 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
             throw CoreDataError.updateError(error)
         }
     }
-
 }
 
 extension KickboardCoreData {

@@ -9,7 +9,7 @@ import Foundation
 
 final class BrandRepository: BrandRepositoryProtocol {
 
-    private let coreData: BrandCoreData
+    private let coreData: BrandCoreDataProtocol
 
     init(coreData: BrandCoreData) {
         self.coreData = coreData
