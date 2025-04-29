@@ -37,6 +37,10 @@ final class LogInViewController: UIViewController {
 
 extension LogInViewController {
     func configure() {
+        setAction()
+    }
+    
+    func setAction() {
         logInView.logInButton.addTarget(self, action: #selector(logInButtonTapped), for: .touchUpInside)
         logInView.signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }

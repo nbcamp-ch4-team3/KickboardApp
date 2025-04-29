@@ -10,13 +10,13 @@ import SnapKit
 import Then
 
 final class SignUpView: UIView {
-    let button = OnboardingButton()
+    let button = OnboardingButton(type: .confirm)
     
     let titleLabel = UILabel()
     let descriptionLabel = UILabel()
     
-    let textField = OnboardingTextField()
-    let confirmTextField = OnboardingTextField()
+    let textField = OnboardingTextField(type: .signUpId)
+    let confirmTextField = OnboardingTextField(type: .signUpConfirmPassword)
     
     private let appLogoImageView = UIImageView()
     private let textFieldStackView = UIStackView()
@@ -71,21 +71,9 @@ extension SignUpView {
             $0.numberOfLines = 0
         }
         
-        textField.do {
-            $0.placeholder = "아이디"
-        }
-        
-        confirmTextField.do {
-            $0.placeholder = "비밀번호 확인"
-        }
-        
         textFieldStackView.do {
             $0.axis = .vertical
             $0.spacing = 20
-        }
-        
-        button.do {
-            $0.setTitle("확인", for: .normal)
         }
     }
     

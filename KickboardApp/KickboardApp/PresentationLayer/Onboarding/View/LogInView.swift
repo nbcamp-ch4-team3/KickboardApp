@@ -10,11 +10,11 @@ import SnapKit
 import Then
 
 final class LogInView: UIView {
-    let logInButton = OnboardingButton()
+    let logInButton = OnboardingButton(type: .logIn)
     let signUpButton = UIButton()
     
-    private let idTextfield = OnboardingTextField()
-    private let passwordTextField = OnboardingTextField()
+    private let idTextfield = OnboardingTextField(type: .logInId)
+    private let passwordTextField = OnboardingTextField(type: .logInPassword)
     
     private let appLogoImageView = UIImageView()
     private let appNameImageView = UIImageView()
@@ -65,18 +65,6 @@ extension LogInView {
         appNameImageView.do {
             $0.image = UIImage(named: "textLogo")
             $0.contentMode = .scaleAspectFit
-        }
-        
-        idTextfield.do {
-            $0.placeholder = "아이디"
-        }
-        
-        passwordTextField.do {
-            $0.placeholder = "비밀번호"
-        }
-        
-        logInButton.do {
-            $0.setTitle("로그인", for: .normal)
         }
         
         signUpLabel.do {
