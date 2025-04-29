@@ -81,7 +81,7 @@ private extension HomeView {
 
         searchTextField.snp.makeConstraints {
             $0.directionalHorizontalEdges.equalToSuperview().inset(28)
-            $0.top.equalToSuperview().inset(72)
+            $0.top.equalTo(safeAreaLayoutGuide).offset(24)
             $0.height.equalTo(48)
         }
     }
@@ -91,7 +91,6 @@ private extension HomeView {
     }
 
     @objc private func didTapMarker() {
-        print("didTapMarker")
         delegate?.didTapMarker()
     }
 }

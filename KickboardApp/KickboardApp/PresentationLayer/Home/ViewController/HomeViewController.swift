@@ -8,6 +8,7 @@
 import UIKit
 import NMapsMap
 import CoreLocation
+import FittedSheets
 
 class HomeViewController: UIViewController {
     private let homeView = HomeView()
@@ -112,10 +113,14 @@ extension HomeViewController: HomeViewDelegate {
     func didTapMarker() {
         print("didTapKickboard")
         let vc = HomeBottomSheetViewController()
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.medium()]
-            sheet.prefersGrabberVisible = true
-        }
-        present(vc, animated: true)
+        var options = SheetOptions()
+        // 라이브러리 기본 옵션을 취소하는 설정들
+        options.shrinkPresentingViewController = false
+        options.useFullScreenMode = false
+        options.shouldExtendBackground = false
+
+        let sheetVC = SheetViewController(controller: vc, sizes: [.intrinsic], options: options) // 내부 컴포넌트 크기에 의한 높이 계산
+
+        present(sheetVC, animated: true)
     }
 }
