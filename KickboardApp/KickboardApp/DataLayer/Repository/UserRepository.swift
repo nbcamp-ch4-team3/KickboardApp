@@ -35,11 +35,7 @@ final class UserRepository: UserRepositoryProtocol {
     }
     
     func saveUserInfo(_ user: User) throws {
-        let entity = UserEntity()
-        entity.id = user.id
-        entity.password = user.password
-        entity.nickname = user.nickname
-        try coreData.saveUser(entity)
+        try coreData.saveUser(user)
     }
 }
 

@@ -10,7 +10,7 @@ protocol UserCoreDataProtocol {
     func findUser() throws -> UserEntity?
     func isExistUser(_ id: String) throws -> Bool
     func validatePassword(_ password: String, for id: String) throws -> Bool
-    func saveUser(_ userEntity: UserEntity) throws
+    func saveUser(_ user: User) throws
 }
 
 final class UserCoreData: UserCoreDataProtocol {
@@ -68,11 +68,11 @@ final class UserCoreData: UserCoreDataProtocol {
     }
     
     // 유저 데이터 저장
-    func saveUser(_ userEntity: UserEntity) throws {
+    func saveUser(_ user: User) throws {
         let userEntity = UserEntity(context: viewContext)
-        userEntity.id = userEntity.id
-        userEntity.password = userEntity.password
-        userEntity.nickname = userEntity.nickname
+        userEntity.id = user.id
+        userEntity.password = user.password
+        userEntity.nickname = user.nickname
         
         do {
             try viewContext.save()
