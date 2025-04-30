@@ -22,9 +22,9 @@ final class MyPageView: UIView {
     private let separatorView = UIView()
     private let cellSeparatorView = UIView()
     private let myPageTitleLabel = UILabel()
-    private let hitoryCell = ListCellView(type: .history)
-    private let kickboardCell = ListCellView(type: .kickboard)
-    private let logoutCell = ListCellView(type: .logout)
+    let hitoryCell = ListCellView(type: .history)
+    let kickboardCell = ListCellView(type: .kickboard)
+    let logoutCell = ListCellView(type: .logout)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
