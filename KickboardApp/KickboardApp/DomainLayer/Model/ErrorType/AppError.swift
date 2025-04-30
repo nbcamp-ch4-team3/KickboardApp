@@ -12,14 +12,16 @@ protocol AppErrorProtocol: LocalizedError {
     var debugDescription: String { get }
 }
 
-enum AppError: AppErrorProtocol {
-    case networkError(Error)
+enum AppError: LocalizedError {
+    case networkError(NetworkError)
     case coreDataError(CoreDataError)
     case userDefaultsError(UserDefaultsError)
     case unKnown(Error)
 
     init(_ error: Error) {
         switch error {
+        case let error as NetworkError:
+            self = .networkError(error)
         case let error as CoreDataError:
             self = .coreDataError(error)
         case let error as UserDefaultsError:
@@ -31,20 +33,20 @@ enum AppError: AppErrorProtocol {
 
     var errorDescription: String? {
         switch self {
-        case .coreDataError(let error):
-            error.errorDescription
-        case .userDefaultsError(let error):
-            error.errorDescription
+        case .networkError(let error as AppErrorProtocol),
+             .coreDataError(let error as AppErrorProtocol),
+             .userDefaultsError(let error as AppErrorProtocol):
+            return error.errorDescription
         default:
-            "알 수 없는 오류가 발생했습니다."
+            return "알 수 없는 오류가 발생했습니다."
         }
     }
 
     var debugDescription: String {
         switch self {
-        case .coreDataError(let error):
-            error.debugDescription
-        case .userDefaultsError(let error):
+        case .networkError(let error as AppErrorProtocol),
+             .coreDataError(let error as AppErrorProtocol),
+             .userDefaultsError(let error as AppErrorProtocol):
             error.debugDescription
         default:
             self.localizedDescription
@@ -60,6 +62,8 @@ extension AppError {
 
     var alertType: AlertType {
         switch self {
+        case .networkError:
+            return .networkError
         default:
             return .defaultError
         }
