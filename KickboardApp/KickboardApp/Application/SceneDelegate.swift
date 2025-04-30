@@ -16,11 +16,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = ViewController()
         
+        // 의존성 주입
+        let userCoreData = UserCoreData()
+        let logInValidateUseCase = LogInValidateUseCase(userCoreData: userCoreData)
+        let logInViewModel = LogInViewModel(logInValidateUseCase: logInValidateUseCase)
+        
         var isLogin = false
         if isLogin {
             window?.rootViewController = TabBarController()
         } else {
-            window?.rootViewController = UINavigationController(rootViewController: LogInViewController())
+            window?.rootViewController = UINavigationController(rootViewController: LogInViewController(viewModel: logInViewModel))
         }
         
         window?.makeKeyAndVisible()

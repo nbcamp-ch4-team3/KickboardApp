@@ -7,9 +7,43 @@
 
 import UIKit
 
+enum OnboardingTextFieldType {
+    case logInId
+    case logInPassword
+    case signUpId
+    case signUpPassword
+    case signUpConfirmPassword
+    case nickname
+    
+    var placeholder: String {
+        switch self {
+        case .logInId, .signUpId:
+            "아이디"
+        case .logInPassword, .signUpPassword:
+            "비밀번호"
+        case .signUpConfirmPassword:
+            "비밀번호 확인"
+        case .nickname:
+            "닉네임"
+        }
+    }
+    
+    var isSecureTextEntry: Bool {
+        switch self {
+        case .logInPassword, .signUpPassword, .signUpConfirmPassword:
+            true
+        default:
+            false
+        }
+    }
+}
+
 final class OnboardingTextField: UITextField {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    let type: OnboardingTextFieldType
+    
+    init(type: OnboardingTextFieldType) {
+        self.type = type
+        super.init(frame: .zero)
         
         clipsToBounds = true
         layer.cornerRadius = 24 // 텍스트 필드 높이 48
@@ -18,6 +52,10 @@ final class OnboardingTextField: UITextField {
         leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0)) // 왼쪽 공백 추가
         leftViewMode = .always
         font = .font(.pretendardRegular, ofSize: 18)
+        placeholder = type.placeholder
+        isSecureTextEntry = type.isSecureTextEntry
+        autocorrectionType = .no
+        autocapitalizationType = .none
     }
     
     required init?(coder: NSCoder) {

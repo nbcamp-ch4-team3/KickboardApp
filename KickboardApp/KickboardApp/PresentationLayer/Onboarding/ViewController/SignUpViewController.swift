@@ -30,12 +30,15 @@ final class SignUpViewController: UIViewController {
 extension SignUpViewController {
     func configure() {
         setStyle()
-        
-        signUpView.button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        setAction()
     }
     
     func setStyle() {
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    func setAction() {
+        signUpView.button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
 }
