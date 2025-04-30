@@ -25,5 +25,13 @@ final class UserRepository: UserRepositoryProtocol {
         }
         return User(id: id, password: password, nickname: nickname)
     }
+    
+    func isExistUser(_ id: String) throws -> Bool {
+        try coreData.isExistUser(id)
+    }
+    
+    func validatePassword(_ password: String, for id: String) throws -> Bool {
+        try coreData.validatePassword(password, for: id)
+    }
 }
 

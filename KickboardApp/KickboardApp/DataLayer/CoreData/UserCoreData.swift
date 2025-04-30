@@ -42,12 +42,10 @@ final class UserCoreData: UserCoreDataProtocol {
 
         do {
             let users = try viewContext.fetch(fetchRequest)
-            if !users.isEmpty { return true }
+            return !users.isEmpty
         } catch {
             throw CoreDataError.readError(error)
         }
-
-        return false
     }
 
     // 해당 id에 대해 비밀번호가 맞는지 확인
@@ -58,16 +56,14 @@ final class UserCoreData: UserCoreDataProtocol {
         do {
             let users = try viewContext.fetch(fetchRequest)
 
-            for user in users {
-                if user.password == password {
-                    return true
-                }
+            guard let user = users.first else {
+                throw CoreDataError.entityNotFound("validatePassword - nil Data")
             }
+            
+            return user.password == password
         } catch {
             throw CoreDataError.readError(error)
         }
-
-        return false
     }
 }
 

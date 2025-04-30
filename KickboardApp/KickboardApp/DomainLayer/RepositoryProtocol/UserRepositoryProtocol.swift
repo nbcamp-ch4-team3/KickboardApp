@@ -9,4 +9,6 @@ import Foundation
 
 protocol UserRepositoryProtocol {
     func readMyUserInfo() throws -> User
+    func isExistUser(_ id: String) throws -> Bool
+    func validatePassword(_ password: String, for id: String) throws -> Bool
 }
