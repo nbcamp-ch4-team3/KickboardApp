@@ -25,6 +25,12 @@ final class SignUpViewModel {
 //        }
 //    }
     
+    private let signUpUseCase: SignUpUseCaseProtocol
+    
+    init(signUpUseCase: SignUpUseCaseProtocol) {
+        self.signUpUseCase = signUpUseCase
+    }
+    
     // 아이디 검증
     func validateId(_ id: String) -> ValidateResult {
         print("id: \(id)")
@@ -44,6 +50,14 @@ final class SignUpViewModel {
         }
         
         // 코어 데이터 중복 여부 확인
+        do {
+            let result = try signUpUseCase.isExistUser(id)
+            if result {
+                return .invalid(message: "이미 존재하는 아이디입니다.")
+            }
+        } catch {
+            print(error)
+        }
         
         self.id = id
         return .valid
@@ -122,6 +136,12 @@ final class SignUpViewModel {
         print("id: \(id), password: \(password), nickname: \(nickname)")
         
         // 코어 데이터에 회원정보 저장
+        let user = User(id: id, password: password, nickname: nickname)
+        do {
+            try signUpUseCase.saveUserInfo(user)
+        } catch {
+            print(error)
+        }
         
         return .valid
     }

@@ -40,8 +40,9 @@ final class LogInViewController: UIViewController {
     @objc func signUpButtonTapped() {
         print("Sign Up Button Tapped!")
         
-        let viewModel = SignUpViewModel()
-        let viewController = SignUpViewController(status: .id, viewModel: viewModel)
+        let diContainer = DIContainer()
+        let viewController = diContainer.makeSignUpViewController()
+        
         navigationController?.pushViewController(viewController, animated: true)
     }
     

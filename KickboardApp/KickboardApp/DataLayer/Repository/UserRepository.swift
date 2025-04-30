@@ -33,5 +33,13 @@ final class UserRepository: UserRepositoryProtocol {
     func validatePassword(_ password: String, for id: String) throws -> Bool {
         try coreData.validatePassword(password, for: id)
     }
+    
+    func saveUserInfo(_ user: User) throws {
+        let entity = UserEntity()
+        entity.id = user.id
+        entity.password = user.password
+        entity.nickname = user.nickname
+        try coreData.saveUser(entity)
+    }
 }
 
