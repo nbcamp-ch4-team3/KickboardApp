@@ -8,13 +8,13 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    func fetchLocalInfomation(query: String) async throws -> LocalDTO
+    func fetchLocalInfo(query: String) async throws -> LocalDTO
 }
 
 final class NetworkService: NetworkServiceProtocol {
     private let baseURL = "https://openapi.naver.com"
 
-    func fetchLocalInfomation(query: String) async throws -> LocalDTO {
+    func fetchLocalInfo(query: String) async throws -> LocalDTO {
         let path = "/v1/search/local.json"
         guard var components = URLComponents(string: baseURL + path) else {
             throw NetworkError.invalidURL(url: baseURL + path)

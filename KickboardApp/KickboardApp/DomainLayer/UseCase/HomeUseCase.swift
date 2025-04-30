@@ -24,3 +24,13 @@ final class HomeUseCase: HomeUseCaseProtocol {
         try kickboardRepository.getAllKickboard()
     }
 }
+
+    func fetchLocalInfo(query: String) async throws -> [Local]
+    private let localRepository: LocalRepositoryProtocol
+    init(localRepository: LocalRepositoryProtocol) {
+
+        self.localRepository = localRepository
+    }
+    func fetchLocalInfo(query: String) async throws -> [Local] {
+        try await localRepository.fetchLocalInfo(query: query)
+    }
