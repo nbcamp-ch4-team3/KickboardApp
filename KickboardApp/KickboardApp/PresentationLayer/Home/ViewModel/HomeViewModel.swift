@@ -12,12 +12,22 @@ protocol HomeViewModelProtocol: AnyObject {
     var mockKickboards: [Kickboard] { get set }
 
     func generateMockKickboards()
+    func fetchAllKickboards() throws
     func nearbyKickboards(from location: CLLocation, within meters: Double) -> [Kickboard]
 }
 
 final class HomeViewModel: HomeViewModelProtocol {
 
+    private let useCase: HomeUseCaseProtocol
+
+    init(
+        useCase: HomeUseCaseProtocol
+    ) {
+        self.useCase = useCase
+    }
+
     var mockKickboards: [Kickboard] = []
+    var kickboards: [Kickboard] = []
 
     func generateMockKickboards() {
         mockKickboards = [
@@ -76,8 +86,16 @@ final class HomeViewModel: HomeViewModelProtocol {
         ]
     }
 
+    func fetchAllKickboards() throws {
+        do {
+            self.kickboards = try useCase.getAllKickboard()
+        } catch {
+            throw CoreDataError.readError(error)
+        }
+    }
+
     func nearbyKickboards(from location: CLLocation, within meters: Double) -> [Kickboard] {
-        return mockKickboards.filter { kickboard in
+        return kickboards.filter { kickboard in
             let kickboardLocation = CLLocation(latitude: kickboard.latitude, longitude: kickboard.longitude)
             return location.distance(from: kickboardLocation) <= meters
         }
