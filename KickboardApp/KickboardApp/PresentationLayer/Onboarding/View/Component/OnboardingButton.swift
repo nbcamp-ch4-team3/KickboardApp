@@ -25,7 +25,7 @@ enum OnboardingButtonType {
 }
 
 final class OnboardingButton: UIButton {
-    let type: OnboardingButtonType
+    var type: OnboardingButtonType
     
     init(type: OnboardingButtonType) {
         self.type = type
@@ -41,5 +41,9 @@ final class OnboardingButton: UIButton {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(type: OnboardingButtonType) {
+        setTitle(type.title, for: .normal)
     }
 }
