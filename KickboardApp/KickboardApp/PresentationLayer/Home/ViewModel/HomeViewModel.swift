@@ -8,12 +8,9 @@
 import Foundation
 import CoreLocation
 
-protocol HomeViewModelProtocol: AnyObject {
-    var mockKickboards: [Kickboard] { get set }
-
-    func generateMockKickboards()
-    func fetchAllKickboards() throws
-    func nearbyKickboards(from location: CLLocation, within meters: Double) -> [Kickboard]
+protocol HomeViewModelDelegate: AnyObject {
+    func didFailWithError(_ error: AppError)
+    func didUpdateKickboards(kickboards: [Kickboard])
 }
 
 protocol HomeViewModelDelegate: AnyObject {
@@ -27,6 +24,29 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
 
     var mockKickboards: [Kickboard] = []
     var kickboards: [Kickboard] = []
+    weak var delegate: HomeViewModelDelegate?
+
+    var action: ((Action) -> Void)?
+
+    enum Action {
+        case fetchKickboards
+    }
+
+    init(useCase: HomeUseCaseProtocol) {
+        self.useCase = useCase
+
+        action = {[weak self] action in
+            guard let self else { return }
+            switch action {
+            case .fetchKickboards:
+                do {
+                    try self.fetchKickboards()
+                } catch {
+                    self.delegate?.didFailWithError(AppError(error))
+                }
+            }
+        }
+    }
 
     var action: ((Action) -> Void)?
 
@@ -102,9 +122,10 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
         ]
     }
 
-    func fetchAllKickboards() throws {
+    private func fetchKickboards() throws {
         do {
             self.kickboards = try useCase.getAllKickboard()
+            delegate?.didUpdateKickboards(kickboards: kickboards)
         } catch {
             throw CoreDataError.readError(error)
         }

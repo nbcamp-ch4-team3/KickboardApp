@@ -36,17 +36,8 @@ final class HomeViewController: UIViewController {
         viewModel.delegate = self
 
 //        homeViewModel.generateMockKickboards()
-        try? loadData()
+        viewModel.action?(.fetchKickboards)
     }
-
-    private func loadData() throws {
-        do {
-            try viewModel.fetchAllKickboards()
-        } catch {
-            throw CoreDataError.readError(error)
-        }
-    }
-
 }
 
 private extension HomeViewController {
@@ -121,13 +112,8 @@ private extension HomeViewController {
 
 extension HomeViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let currentLocation = locations.last else { print("마지막 위치 정보 없음"); return }
-        let filteredKickboards = viewModel.nearbyKickboards(from: currentLocation, within: 300)
-        DispatchQueue.main.async {
-            self.homeView.updateKickboardMarkers(with: filteredKickboards)
-        }
-    }
 
+    }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
 //        DispatchQueue.global().async {
@@ -175,6 +161,20 @@ extension HomeViewController: HomeViewModelDelegate {
         DispatchQueue.main.async {
             print("didUpdateLocals: \(locals)")
             self.homeView.setSearchResult(locals: locals)
+        }
+    }
+
+    func didFailWithError(_ error: AppError) {
+        DispatchQueue.main.async {
+            self.showErrorAlert(error: error)
+        }
+    }
+}
+
+extension HomeViewController: HomeViewModelDelegate {
+    func didUpdateKickboards(kickboards: [Kickboard]) {
+        DispatchQueue.main.async {
+            self.homeView.updateKickboardMarkers(with: kickboards)
         }
     }
 
