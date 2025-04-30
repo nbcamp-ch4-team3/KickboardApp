@@ -32,6 +32,10 @@ final class RegisterView: UIView {
         mapView.addCameraDelegate(delegate: delegate)
     }
 
+    func setDataSource(brands: [Brand]) {
+        settingView.setDataSource(brands: brands)
+    }
+
     func configure(location: NMGLatLng) {
         settingView.configure(location: location)
     }

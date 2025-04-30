@@ -10,7 +10,17 @@ import NMapsMap
 
 final class RegisterViewController: UIViewController {
     private let registerView = RegisterView()
+    private let viewModel: RegisterViewModel
 
+    init(viewModel: RegisterViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func loadView() {
         super.loadView()
 
@@ -20,17 +30,28 @@ final class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setProtocol()
+        viewModel.action?(.getAllBrand)
     }
 
     private func setProtocol() {
         registerView.setKickboardSettingViewDelegate(self)
         registerView.setCameraDelegate(self)
+
+        viewModel.delegate = self
     }
 }
 
 extension RegisterViewController: KickboardSettingViewDelegate {
     func didTapRegisterButton(latitude: Double, longitude: Double, brand: Brand, battery: Int) {
-        print("latitude: \(latitude), longitude: \(longitude), brand: \(brand), battery: \(battery)")
+        let kickboard = Kickboard(
+            id: UUID(),
+            latitude: latitude,
+            longitude: longitude,
+            battery: battery,
+            isAvailable: true,
+            brand: brand
+        )
+        viewModel.action?(.saveKickboard(kickboard))
     }
 }
 
@@ -38,5 +59,20 @@ extension RegisterViewController: NMFMapViewCameraDelegate {
     func mapViewCameraIdle(_ mapView: NMFMapView) {
         let location = mapView.cameraPosition.target
         registerView.configure(location: location)
+    }
+}
+
+extension RegisterViewController: RegisterViewModelDelegate {
+    
+    func didGetAllBrand(_ brands: [Brand]) {
+        registerView.setDataSource(brands: brands)
+    }
+
+    func didSaveKickboard() {
+        self.showAlert(title: "등록 성공", message: "킥보드가 등록되었습니다.")
+    }
+
+    func didFailWithError(_ error: AppError) {
+        self.showErrorAlert(error: error)
     }
 }

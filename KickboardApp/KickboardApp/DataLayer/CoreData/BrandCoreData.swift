@@ -9,6 +9,7 @@ import CoreData
 
 protocol BrandCoreDataProtocol {
     func readAllData() throws -> [BrandEntity]
+    func findBrand(with title: String) throws -> BrandEntity?
 }
 
 final class BrandCoreData: BrandCoreDataProtocol {
@@ -16,6 +17,12 @@ final class BrandCoreData: BrandCoreDataProtocol {
 
     init() {
         self.viewContext = CoreDataStorage.shared.persistentContainer.viewContext
+    }
+
+    func findBrand(with title: String) throws -> BrandEntity? {
+        let fetchRequest = BrandEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "title == %@", title)
+        return try viewContext.fetch(fetchRequest).first
     }
 
     func readAllData() throws -> [BrandEntity] {

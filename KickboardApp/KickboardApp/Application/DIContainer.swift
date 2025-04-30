@@ -1,0 +1,38 @@
+//
+//  DIContainer.swift
+//  KickboardApp
+//
+//  Created by 이수현 on 4/29/25.
+//
+
+import CoreData
+import UIKit
+
+struct DIContainer {
+    private let brandRepository: BrandRepositoryProtocol
+    private let kickboardRepository: KickboardRepositoryProtocol
+    private let userRepository: UserRepositoryProtocol
+
+    init() {
+        let brandCoreData = BrandCoreData()
+        let kickboardCoreData = KickboardCoreData()
+        let userCoreData = UserCoreData()
+
+        brandRepository = BrandRepository(coreData:brandCoreData)
+        kickboardRepository = KickboardRepository(
+            kickboardCoreData: kickboardCoreData,
+            userCoreData: userCoreData,
+            brandCoreData: brandCoreData
+        )
+        userRepository = UserRepository(coreData:userCoreData)
+    }
+
+    func makeRegisterViewController() -> RegisterViewController {
+        let useCase = RegisterUseCase(
+            brandRepository: brandRepository,
+            kickboardRepository: kickboardRepository
+        )
+        let viewModel = RegisterViewModel(useCase: useCase)
+        return RegisterViewController(viewModel: viewModel)
+    }
+}

@@ -7,12 +7,13 @@
 
 import Foundation
 
-enum CoreDataError: LocalizedError {
+enum CoreDataError: AppErrorProtocol {
     case saveError(Error)
     case deleteError(Error)
     case updateError(Error)
     case readError(Error)
-    case entityNotFound(Error)
+    case entityNotFound(String)
+    case notFound(String)
 
     var errorDescription: String? {
         return "관리자에게 문의 바랍니다"
@@ -28,8 +29,10 @@ enum CoreDataError: LocalizedError {
             "updateError: \(error.localizedDescription)"
         case .readError(let error):
             "readError: \(error.localizedDescription)"
-        case .entityNotFound(let error):
-            "entityNotFound: \(error.localizedDescription)"
+        case .entityNotFound(let errorDescription):
+            "entityNotFound: \(errorDescription)"
+        case .notFound(let error):
+            "notFound: \(error)"
         }
     }
 }
