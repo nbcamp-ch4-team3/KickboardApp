@@ -18,8 +18,8 @@ final class LocalRepository: LocalRepositoryProtocol {
     func fetchLocalInfo(query: String) async throws -> [Local] {
         return try await service.fetchLocalInfo(query: query).items
             .compactMap { local -> Local? in
-                guard let utmkX = Double(local.mapx),
-                      let utmkY = Double(local.mapy)
+                guard let lng = Double(local.mapx),
+                      let lat = Double(local.mapy)
                 else {
                     return nil
                 }
@@ -27,14 +27,11 @@ final class LocalRepository: LocalRepositoryProtocol {
                     .replacingOccurrences(of: "<b>", with: "")
                     .replacingOccurrences(of: "</b>", with: "")
 
-                let utmkCoord = NMGUtmk(x: utmkX, y: utmkY)
-                let latlngCoord = utmkCoord.toLatLng()
-
                 return Local(
                     title: title,
                     roadAddress: local.roadAddress,
-                    latitude: latlngCoord.lat,
-                    longitude: latlngCoord.lng
+                    latitude: lat / 10000000,
+                    longitude: lng / 10000000
                 )
             }
     }
