@@ -195,7 +195,9 @@ extension HomeView {
             let marker = NMFMarker()
             marker.position = NMGLatLng(lat: kickboard.latitude, lng: kickboard.longitude)
             marker.mapView = naverMapView.mapView
-            marker.width = 20
+            marker.iconImage = NMF_MARKER_IMAGE_BLACK
+            marker.iconTintColor = colorByBrand(by: kickboard.brand.title)
+            marker.width = 25
             marker.height = 35
             marker.touchHandler = { [weak self] (overlay: NMFOverlay) -> Bool in
                 guard let self else { return false }
@@ -205,6 +207,19 @@ extension HomeView {
                 return true
             }
             markers.append(marker)
+        }
+    }
+
+    func colorByBrand(by brandTitle: String) -> UIColor {
+        switch brandTitle {
+        case "킥":
+            return UIColor(hex: "00C2AC") ?? .cyan
+        case "빔":
+            return UIColor(hex: "7247FE") ?? .purple
+        case "씽씽":
+            return UIColor(hex: "FFD937") ?? .yellow
+        default:
+            return UIColor.green
         }
     }
 }
