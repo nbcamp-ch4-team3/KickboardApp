@@ -9,14 +9,15 @@ import UIKit
 import NMapsMap
 
 protocol HomeViewDelegate: AnyObject {
-    func didTapMarker()
+    func didTapMarker(with kickboard: Kickboard)
 }
 
 final class HomeView: UIView {
     weak var delegate: HomeViewDelegate?
+    private var markers: [NMFMarker] = []
 
     private let searchTextField = UITextField()
-    private let mapView = NMFMapView()
+    private let naverMapView = NMFNaverMapView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,16 +67,15 @@ private extension HomeView {
             $0.rightViewMode = .always
             $0.rightView = rightButton
 
-            rightButton.addTarget(self, action: #selector(didTapMarker), for: .touchUpInside)
         }
     }
 
     func setHierarchy() {
-        addSubViews(mapView, searchTextField)
+        addSubViews(naverMapView, searchTextField)
     }
 
     func setConstraints() {
-        mapView.snp.makeConstraints {
+        naverMapView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
 
@@ -89,15 +89,37 @@ private extension HomeView {
     func setAction() {
 
     }
-
-    @objc private func didTapMarker() {
-        delegate?.didTapMarker()
-    }
 }
 
 extension HomeView {
-    func moveCamera(to update: NMFCameraUpdate) {
-        mapView.moveCamera(update)
+    func moveCamera(to update: NMGLatLng) {
+        let cameraUpdate = NMFCameraUpdate(scrollTo: update)
+        cameraUpdate.animation = .easeIn
+
+        let locationOverlay = naverMapView.mapView.locationOverlay
+        locationOverlay.location = update
+        locationOverlay.hidden = false
+        
+        naverMapView.mapView.moveCamera(cameraUpdate)
+    }
+
+    func updateKickboardMarkers(with: [Kickboard]) {
+        markers.removeAll()
+
+        with.forEach { kickboard in
+            let marker = NMFMarker()
+            marker.position = NMGLatLng(lat: kickboard.latitude, lng: kickboard.longitude)
+            marker.mapView = naverMapView.mapView
+            marker.width = 20
+            marker.height = 35
+            marker.touchHandler = { [weak self] (overlay: NMFOverlay) -> Bool in
+                guard let self else { return false }
+                
+                self.delegate?.didTapMarker(with: kickboard)
+
+                return true
+            }
+            markers.append(marker)
+        }
     }
 }
-

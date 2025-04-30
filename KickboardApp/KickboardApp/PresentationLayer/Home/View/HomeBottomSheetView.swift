@@ -30,11 +30,10 @@ final class HomeBottomSheetView: UIView {
     func configure(with kickboard: Kickboard) {
         self.kbBrandLabel.text = kickboard.brand.title
         self.kbModelLabel.text = String(kickboard.id.uuidString.prefix(8))
-        self.kbCommentLabel.attributedText = makeComment(distance: Int(kickboard.brand.distancePerBatteryUnit))
+        self.kbCommentLabel.attributedText = makeComment(distance: kickboard.brand.distancePerBatteryUnit)
         self.kbFeePerMinuteLabel.text = "분당 \(kickboard.brand.pricePerMinute)원"
         self.kbImageView.image = UIImage(named: "\(kickboard.brand.imageName)")
-//        self.kbRemainedBatteryView.configure(with: kickboard.battery)
-        self.kbRemainedBatteryView.configure(with: 75)
+        self.kbRemainedBatteryView.configure(with: kickboard.battery)
     }
 }
 
@@ -141,7 +140,7 @@ private extension HomeBottomSheetView {
 }
 
 extension HomeBottomSheetView {
-    private func makeComment(distance: Int) -> NSAttributedString {
+    private func makeComment(distance: Double) -> NSAttributedString {
         let fullText = "약 \(distance)km 주행할 수 있어요!"
         let attributedString = NSMutableAttributedString(string: fullText)
 
