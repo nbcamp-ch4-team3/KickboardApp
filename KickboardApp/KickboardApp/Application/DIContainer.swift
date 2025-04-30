@@ -27,6 +27,14 @@ struct DIContainer {
         userRepository = UserRepository(coreData:userCoreData)
     }
 
+    func makeHomeViewController() -> HomeViewController {
+        let useCase = HomeUseCase(
+            kickboardRepository: kickboardRepository
+        )
+        let viewModel = HomeViewModel(useCase: useCase)
+        return HomeViewController(viewModel: viewModel)
+    }
+
     func makeRegisterViewController() -> RegisterViewController {
         let useCase = RegisterUseCase(
             brandRepository: brandRepository,

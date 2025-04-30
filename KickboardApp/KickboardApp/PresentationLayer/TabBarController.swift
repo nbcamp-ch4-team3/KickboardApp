@@ -8,6 +8,8 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
+    private let diContainer = DIContainer()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -17,10 +19,10 @@ final class TabBarController: UITabBarController {
 
 extension TabBarController {
     func configure() {
-        let homeViewController = HomeViewController()
+        let homeViewController = diContainer.makeHomeViewController()
         homeViewController.tabBarItem = UITabBarItem(title: "지도", image: UIImage(systemName: "map"), tag: 0)
         
-        let registerViewController = ViewController()
+        let registerViewController = diContainer.makeRegisterViewController()
         registerViewController.tabBarItem = UITabBarItem(title: "등록", image: UIImage(systemName: "plus"), tag: 1)
         
         let myPageViewController = ViewController()
