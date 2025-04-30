@@ -10,11 +10,17 @@ import UIKit
 import SnapKit
 import Then
 
+protocol ListCellViewDelegate: AnyObject {
+    func listCellViewDidTap(_ type: ListType)
+}
+
 final class ListCellView: UIView {
     private let listType: ListType
     private let leadingIconImageView = UIImageView()
     private let titleLabel = UILabel()
     private let trailingIconImageView = UIImageView()
+    
+    weak var delegate: ListCellViewDelegate?
     
     init(type: ListType) {
         self.listType = type
@@ -91,6 +97,6 @@ private extension ListCellView {
         
     @objc
     func didTapView() {
-        print("\(listType) 클릭!")
+        delegate?.listCellViewDidTap(listType)
     }
 }
