@@ -15,6 +15,15 @@ final class HomeViewController: UIViewController {
     private let viewModel: HomeViewModelProtocol
     let locationManager = CLLocationManager()
 
+    init(homeViewModel: HomeViewModel) {
+        self.homeViewModel = homeViewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func loadView() {
         view = homeView
     }
@@ -33,6 +42,7 @@ final class HomeViewController: UIViewController {
 
         locationManager.delegate = self
         homeView.delegate = self
+        homeViewModel.delegate = self
 
 //        homeViewModel.generateMockKickboards()
         try? loadData()
@@ -67,7 +77,7 @@ private extension HomeViewController {
             locationManager.requestWhenInUseAuthorization()
         case .denied, .restricted:
             showRequestLocationServiceAlert()
-        case .authorizedWhenInUse:
+        case .authorizedWhenInUse, .authorizedAlways:
             print("authroizedWhenInUse")
             locationManager.startUpdatingLocation()
             updateToCurrentPosition()
@@ -129,14 +139,19 @@ extension HomeViewController: CLLocationManagerDelegate {
 
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        DispatchQueue.global().async {
+//        DispatchQueue.global().async {
             self.askLocationPermission()
-        }
+//        }
     }
 
 }
 
 extension HomeViewController: HomeViewDelegate {
+    func didTapSearchButton(with textField: UITextField) {
+        guard let text = textField.text, !text.isEmpty else { return }
+        homeViewModel.action?(.fetchLocalInfo(text))
+    }
+    
     func didTapMarker(with kickboard: Kickboard) {
         let vc = HomeBottomSheetViewController()
         vc.kickboard = kickboard
@@ -150,5 +165,31 @@ extension HomeViewController: HomeViewDelegate {
         let sheetVC = SheetViewController(controller: vc, sizes: [.intrinsic], options: options) // 내부 컴포넌트 크기에 의한 높이 계산
 
         present(sheetVC, animated: true)
+    }
+
+    func didSelectLocal(with local: Local) {
+        let cameraUpdate = NMGLatLng(
+            lat: local.latitude,
+            lng: local.longitude
+        )
+        DispatchQueue.main.async {
+            self.homeView.moveCamera(to: cameraUpdate)
+        }
+    }
+}
+
+extension HomeViewController: HomeViewModelDelegate {
+
+    func didUpdateLocals(locals: [Local]) {
+        DispatchQueue.main.async {
+            print("didUpdateLocals: \(locals)")
+            self.homeView.setSearchResult(locals: locals)
+        }
+    }
+
+    func didFailWithError(_ error: AppError) {
+        DispatchQueue.main.async {
+            self.showErrorAlert(error: error)
+        }
     }
 }

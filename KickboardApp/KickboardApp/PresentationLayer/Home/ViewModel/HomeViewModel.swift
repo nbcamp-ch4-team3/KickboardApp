@@ -35,7 +35,6 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
 
     init(useCase: HomeUseCaseProtocol) {
         self.useCase = useCase
-        fetchLocalInfo(query: "복정")
 
         action = {[weak self] action in
             switch action {
