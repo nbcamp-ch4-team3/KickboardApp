@@ -9,7 +9,7 @@ import Foundation
 
 final class LogInManager {
     static let shared = LogInManager()
-    
+
     var isLoggedIn = false
     
     private init() {}

@@ -11,9 +11,12 @@ import CoreLocation
 protocol HomeViewModelDelegate: AnyObject {
     func didUpdateLocation(_ location: CLLocation)
     func didRequestLocationServiceAlert(_ alert: UIAlertController)
-    func didUpdateSelectedKickboard(kickboard: Kickboard)
-    func didSaveRideHistory()
     func didUpdateSerachResult(locals: [Local])
+    func didFailWithError(_ error: AppError)
+
+    func didSaveRideHistory()
+    func didUpdateSelectedKickboard(kickboard: Kickboard)
+    func didUpdateKickboards(kickboards: [Kickboard])
 }
 
 final class HomeViewModel: ViewModelProtocol {
@@ -64,66 +67,9 @@ final class HomeViewModel: ViewModelProtocol {
         }
     }
 
-    func generateMockKickboards() {
-        mockKickboards = [
-            Kickboard(
-                id: UUID(),
-                latitude: 34.499621,
-                longitude: 126.531188,
-                battery: 34,
-                isAvailable: true,
-                brand: Brand(
-                    title: "씽씽",
-                    imageName: "ssingSsing",
-                    distancePerBatteryUnit: 2,
-                    pricePerMinute: 190
-                )
-            ),
-            Kickboard(
-                id: UUID(),
-                latitude: 33.499221,
-                longitude: 126.531688,
-                battery: 86,
-                isAvailable: true,
-                brand: Brand(
-                    title: "빔",
-                    imageName: "beam",
-                    distancePerBatteryUnit: 3,
-                    pricePerMinute: 170
-                )
-            ),
-            Kickboard(
-                id: UUID(),
-                latitude: 33.498921,
-                longitude: 126.530188,
-                battery: 68,
-                isAvailable: true,
-                brand: Brand(
-                    title: "킥",
-                    imageName: "kick",
-                    distancePerBatteryUnit: 2.5,
-                    pricePerMinute: 180
-                )
-            ),
-            Kickboard(
-                id: UUID(),
-                latitude: 33.500321,
-                longitude: 126.532288,
-                battery: 44,
-                isAvailable: true,
-                brand: Brand(
-                    title: "씽씽",
-                    imageName: "ssingSsing",
-                    distancePerBatteryUnit: 2,
-                    pricePerMinute: 190
-                )
-            )
-        ]
-    }
-
     private func fetchKickboards() throws {
         do {
-            self.kickboards = try useCase.getAllKickboard()
+            self.kickboards = try homeUseCase.getAllKickboard()
             delegate?.didUpdateKickboards(kickboards: kickboards)
         } catch {
             throw CoreDataError.readError(error)
@@ -150,7 +96,7 @@ final class HomeViewModel: ViewModelProtocol {
 
     private func saveRideHistory(with rideHistory: RideHistory) {
         do {
-            _ = try useCase.saveRideHistory(with: rideHistory)
+            _ = try homeUseCase.saveRideHistory(with: rideHistory)
             delegate?.didSaveRideHistory()
         } catch {
             delegate?.didFailWithError(AppError(error))
@@ -167,3 +113,61 @@ extension HomeViewModel: LocationManagerRepositoryDelegate {
         delegate?.didRequestLocationServiceAlert(alertController)
     }
 }
+
+//
+//func generateMockKickboards() {
+//    mockKickboards = [
+//        Kickboard(
+//            id: UUID(),
+//            latitude: 34.499621,
+//            longitude: 126.531188,
+//            battery: 34,
+//            isAvailable: true,
+//            brand: Brand(
+//                title: "씽씽",
+//                imageName: "ssingSsing",
+//                distancePerBatteryUnit: 2,
+//                pricePerMinute: 190
+//            )
+//        ),
+//        Kickboard(
+//            id: UUID(),
+//            latitude: 33.499221,
+//            longitude: 126.531688,
+//            battery: 86,
+//            isAvailable: true,
+//            brand: Brand(
+//                title: "빔",
+//                imageName: "beam",
+//                distancePerBatteryUnit: 3,
+//                pricePerMinute: 170
+//            )
+//        ),
+//        Kickboard(
+//            id: UUID(),
+//            latitude: 33.498921,
+//            longitude: 126.530188,
+//            battery: 68,
+//            isAvailable: true,
+//            brand: Brand(
+//                title: "킥",
+//                imageName: "kick",
+//                distancePerBatteryUnit: 2.5,
+//                pricePerMinute: 180
+//            )
+//        ),
+//        Kickboard(
+//            id: UUID(),
+//            latitude: 33.500321,
+//            longitude: 126.532288,
+//            battery: 44,
+//            isAvailable: true,
+//            brand: Brand(
+//                title: "씽씽",
+//                imageName: "ssingSsing",
+//                distancePerBatteryUnit: 2,
+//                pricePerMinute: 190
+//            )
+//        )
+//    ]
+//}

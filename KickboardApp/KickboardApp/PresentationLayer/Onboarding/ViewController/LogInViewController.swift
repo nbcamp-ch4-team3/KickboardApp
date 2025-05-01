@@ -40,7 +40,7 @@ final class LogInViewController: UIViewController {
     @objc func signUpButtonTapped() {
         print("Sign Up Button Tapped!")
         
-        let diContainer = DIContainer()
+        let diContainer = DIContainer.shared
         let viewController = diContainer.makeSignUpViewController()
         
         navigationController?.pushViewController(viewController, animated: true)

@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 import CoreLocation
 
-struct DIContainer {
+final class DIContainer {
     static let shared = DIContainer()
     
     private let brandRepository: BrandRepositoryProtocol
@@ -19,7 +19,7 @@ struct DIContainer {
     private let rideHistoryRepository: RideHistoryRepositoryProtocol
     private let locationManagerUseCase: LocationManagerUseCaseProtocol
 
-    init() {
+    private init() {
         let brandCoreData = BrandCoreData()
         let kickboardCoreData = KickboardCoreData()
         let userCoreData = UserCoreData()

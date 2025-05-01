@@ -8,7 +8,7 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    private let diContainer = DIContainer()
+    private let diContainer = DIContainer.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
