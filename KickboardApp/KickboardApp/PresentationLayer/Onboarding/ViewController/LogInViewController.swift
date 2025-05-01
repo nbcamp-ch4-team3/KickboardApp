@@ -74,5 +74,11 @@ extension LogInViewController {
     func setAction() {
         logInView.logInButton.addTarget(self, action: #selector(logInButtonTapped), for: .touchUpInside)
         logInView.signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        
+        logInView.passwordTextField.button.addTarget(self, action: #selector(textFieldButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func textFieldButtonTapped() {
+        logInView.passwordTextField.toggleSecureTextEntry()
     }
 }

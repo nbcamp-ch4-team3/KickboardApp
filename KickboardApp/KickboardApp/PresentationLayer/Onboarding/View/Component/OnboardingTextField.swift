@@ -44,7 +44,7 @@ final class OnboardingTextField: UITextField {
     let button: UIButton = {
         let button = UIButton(type: .system)
         button.sizeToFit()
-        button.tintColor = .black2
+        button.tintColor = .gray2
         return button
     }()
     
@@ -87,13 +87,20 @@ final class OnboardingTextField: UITextField {
 //            button.setTitle("인증", for: .normal)
 //        }
         
-        if type == .signUpPassword || type == .signUpConfirmPassword {
-            let image = UIImage(systemName: "eye")
+        if type == .logInPassword || type == .signUpPassword || type == .signUpConfirmPassword {
+            let image = UIImage(systemName: "eye.slash")
             button.setImage(image, for: .normal)
         }
     }
     
     func toggleSecureTextEntry() {
         isSecureTextEntry.toggle()
+        if isSecureTextEntry {
+            let image = UIImage(systemName: "eye.slash")
+            button.setImage(image, for: .normal)
+        } else {
+            let image = UIImage(systemName: "eye")
+            button.setImage(image, for: .normal)
+        }
     }
 }
