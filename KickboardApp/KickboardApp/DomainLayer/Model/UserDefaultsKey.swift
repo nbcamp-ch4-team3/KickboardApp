@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+enum UserDefaultsKey: String {
+    case isRiding
+    case startTime
+    case kickboard
+}

@@ -43,11 +43,11 @@ final class HomeViewController: UIViewController {
 
     // 앱 진입 시 이용 중인지에 대해 분기 처리
     private func restoreIsRidingState() {
-        let isRiding = UserDefaults.standard.bool(forKey: "isRiding")
+        let isRiding = UserDefaults.standard.bool(forKey: UserDefaultsKey.isRiding.rawValue)
 
         if isRiding,
-           let data = UserDefaults.standard.data(forKey: "kickboard"),
-           let startTime = UserDefaults.standard.object(forKey: "startTime") as? Date,
+           let data = UserDefaults.standard.data(forKey: UserDefaultsKey.kickboard.rawValue),
+           let startTime = UserDefaults.standard.object(forKey: UserDefaultsKey.startTime.rawValue) as? Date,
            let kickboard = try? JSONDecoder().decode(Kickboard.self, from: data) {
 
             let startTimeString = DateUtility.shared.toHourAndMinuteString(from: startTime)
@@ -67,13 +67,13 @@ private extension HomeViewController {
         homeView.setMarkersByState(isRented: false)
         viewModel.selectedKickboard = nil
 
-        if UserDefaults.standard.bool(forKey: "isRiding"),
-           let startTime = UserDefaults.standard.object(forKey: "startTime") as? Date,
-           let data = UserDefaults.standard.data(forKey: "kickboard"),
+        if UserDefaults.standard.bool(forKey: UserDefaultsKey.isRiding.rawValue),
+           let startTime = UserDefaults.standard.object(forKey: UserDefaultsKey.startTime.rawValue) as? Date,
+           let data = UserDefaults.standard.data(forKey: UserDefaultsKey.kickboard.rawValue),
            let kickboard = try? JSONDecoder().decode(Kickboard.self, from: data) {
             let endTime = Date.now
             let timeDiff = DateUtility.shared.minutesBetween(start: startTime, end: endTime)
-            let totalPrice = timeDiff * kickboard.brand.pricePerMinute
+            let totalPrice = (timeDiff + 1) * kickboard.brand.pricePerMinute
 
             let rideHistory = RideHistory(
                 kickboard: kickboard,
@@ -83,6 +83,7 @@ private extension HomeViewController {
             )
 
             viewModel.action?(.saveRideHistory(rideHistory))
+            viewModel.action?(.updateKickboardLocation(kickboard.id))
         }
 
         // 기존 저장되어있던 대여 정보 제거
@@ -209,10 +210,10 @@ extension HomeViewController: HomeBottomSheetVCDelegate {
             startTime: startTimeToString
         )
 
-        UserDefaults.standard.set(true, forKey: "isRiding")
-        UserDefaults.standard.set(startTime, forKey: "startTime")
+        UserDefaults.standard.set(true, forKey: UserDefaultsKey.isRiding.rawValue)
+        UserDefaults.standard.set(startTime, forKey: UserDefaultsKey.startTime.rawValue)
         if let encoded = try? JSONEncoder().encode(selectedKickboard) {
-            UserDefaults.standard.set(encoded, forKey: "kickboard")
+            UserDefaults.standard.set(encoded, forKey: UserDefaultsKey.kickboard.rawValue)
         }
     }
 }
