@@ -22,9 +22,9 @@ final class MyPageView: UIView {
     private let separatorView = UIView()
     private let cellSeparatorView = UIView()
     private let myPageTitleLabel = UILabel()
-    let hitoryCell = ListCellView(type: .history)
-    let kickboardCell = ListCellView(type: .kickboard)
-    let logoutCell = ListCellView(type: .logout)
+    private let historyCell = ListCellView(type: .history)
+    private let kickboardCell = ListCellView(type: .kickboard)
+    private let logoutCell = ListCellView(type: .logout)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -63,7 +63,6 @@ private extension MyPageView {
         }
         
         nameLabel.do {
-            $0.text = "데귤이"
             $0.font = .font(.pretendardBold, ofSize: 18)
             $0.textColor = .primary
         }
@@ -75,7 +74,6 @@ private extension MyPageView {
         }
         
         useLabel.do {
-            $0.text = "이용 중"
             $0.font = .font(.pretendardRegular, ofSize: 15)
             $0.textColor = .black
         }
@@ -112,7 +110,7 @@ private extension MyPageView {
             backgroundColorView,
             containerView,
             myPageTitleLabel,
-            hitoryCell,
+            historyCell,
             kickboardCell,
             cellSeparatorView,
             logoutCell
@@ -157,13 +155,13 @@ private extension MyPageView {
             $0.height.equalTo(24)
         }
         
-        hitoryCell.snp.makeConstraints {
+        historyCell.snp.makeConstraints {
             $0.top.equalTo(myPageTitleLabel.snp.bottom).offset(10)
             $0.directionalHorizontalEdges.equalToSuperview()
         }
         
         kickboardCell.snp.makeConstraints {
-            $0.top.equalTo(hitoryCell.snp.bottom)
+            $0.top.equalTo(historyCell.snp.bottom)
             $0.directionalHorizontalEdges.equalToSuperview()
         }
         
@@ -181,5 +179,21 @@ private extension MyPageView {
     
     func setAction() {
         
+    }
+}
+
+extension MyPageView {
+    func setUserName(_ userName: String) {
+        nameLabel.text = userName
+    }
+    
+    func setIsUsed(_ isUsed: Bool) {
+        useLabel.text = isUsed ? "이용중" : "미사용"
+    }
+    
+    func setListCell(delegate: ListCellViewDelegate) {
+        historyCell.delegate = delegate
+        kickboardCell.delegate = delegate
+        logoutCell.delegate = delegate
     }
 }
