@@ -23,8 +23,9 @@ protocol HomeViewModelDelegate: AnyObject {
 
 final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
     private let useCase: HomeUseCaseProtocol
-    var mockKickboards: [Kickboard] = []
     weak var delegate: HomeViewModelDelegate?
+
+    var mockKickboards: [Kickboard] = []
     var kickboards: [Kickboard] = []
 
     var action: ((Action) -> Void)?

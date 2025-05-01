@@ -12,11 +12,11 @@ import FittedSheets
 
 final class HomeViewController: UIViewController {
     private let homeView = HomeView()
-    private let viewModel: HomeViewModelProtocol
+    private let viewModel: HomeViewModel
     let locationManager = CLLocationManager()
 
-    init(homeViewModel: HomeViewModel) {
-        self.homeViewModel = homeViewModel
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,21 +28,12 @@ final class HomeViewController: UIViewController {
         view = homeView
     }
 
-    init(viewModel: HomeViewModelProtocol) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         locationManager.delegate = self
         homeView.delegate = self
-        homeViewModel.delegate = self
+        viewModel.delegate = self
 
 //        homeViewModel.generateMockKickboards()
         try? loadData()
@@ -149,7 +140,7 @@ extension HomeViewController: CLLocationManagerDelegate {
 extension HomeViewController: HomeViewDelegate {
     func didTapSearchButton(with textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else { return }
-        homeViewModel.action?(.fetchSearchResult(text))
+        viewModel.action?(.fetchSearchResult(text))
     }
     
     func didTapMarker(with kickboard: Kickboard) {

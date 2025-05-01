@@ -32,7 +32,8 @@ struct DIContainer {
 
     func makeHomeViewController() -> HomeViewController {
         let useCase = HomeUseCase(
-            kickboardRepository: kickboardRepository
+            kickboardRepository: kickboardRepository,
+            localRepository: localRepository
         )
         let viewModel = HomeViewModel(useCase: useCase)
         return HomeViewController(viewModel: viewModel)
@@ -45,12 +46,6 @@ struct DIContainer {
         )
         let viewModel = RegisterViewModel(useCase: useCase)
         return RegisterViewController(viewModel: viewModel)
-    }
-
-    func makeHomeViewController() -> HomeViewController {
-        let useCase = HomeUseCase(localRepository: localRepository)
-        let viewModel = HomeViewModel(useCase: useCase)
-        return HomeViewController(homeViewModel: viewModel)
     }
     
     func makeLogInViewController() -> LogInViewController {

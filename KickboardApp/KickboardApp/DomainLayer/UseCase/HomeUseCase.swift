@@ -14,27 +14,21 @@ protocol HomeUseCaseProtocol {
 
 final class HomeUseCase: HomeUseCaseProtocol {
     private let kickboardRepository: KickboardRepositoryProtocol
+    private let localRepository: LocalRepositoryProtocol
 
     init(
-        kickboardRepository: KickboardRepositoryProtocol
+        kickboardRepository: KickboardRepositoryProtocol,
+        localRepository: LocalRepositoryProtocol
     ) {
         self.kickboardRepository = kickboardRepository
+        self.localRepository = localRepository
     }
 
     func getAllKickboard() throws -> [Kickboard] {
         try kickboardRepository.getAllKickboard()
     }
-}
-
-    func fetchLocalInfo(query: String) async throws -> [Local]
-    private let localRepository: LocalRepositoryProtocol
-    init(localRepository: LocalRepositoryProtocol) {
-
-        self.localRepository = localRepository
-    }
-    func fetchLocalInfo(query: String) async throws -> [Local] {
-        try await localRepository.fetchLocalInfo(query: query)
 
     func fetchSearchResult(query: String) async throws -> [Local] {
         try await localRepository.fetchSearchResult(query: query)
     }
+}
