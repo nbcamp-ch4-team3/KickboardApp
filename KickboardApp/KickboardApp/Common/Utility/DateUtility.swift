@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DateUtility {
+final class DateUtility {
     static let shared = DateUtility()
 
     init() {}
