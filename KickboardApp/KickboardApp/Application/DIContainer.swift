@@ -7,6 +7,7 @@
 
 import CoreData
 import UIKit
+import CoreLocation
 
 struct DIContainer {
     static let shared = DIContainer()
@@ -16,12 +17,15 @@ struct DIContainer {
     private let userRepository: UserRepositoryProtocol
     private let localRepository: LocalRepositoryProtocol
     private let rideHistoryRepository: RideHistoryRepositoryProtocol
+    private let locationManagerUseCase: LocationManagerUseCaseProtocol
 
     init() {
         let brandCoreData = BrandCoreData()
         let kickboardCoreData = KickboardCoreData()
         let userCoreData = UserCoreData()
         let networkService = NetworkService()
+        let locationManager = CLLocationManager()
+        let locationManagerRepository = LocationManagerRepository(locationManager: locationManager)
         let rideHistoryCoreData = RideHistoryCoreData()
 
         brandRepository = BrandRepository(coreData:brandCoreData)
@@ -37,24 +41,34 @@ struct DIContainer {
             rideHistoryCoreData: rideHistoryCoreData,
             userCoreData: userCoreData
         )
+
+        locationManagerUseCase = LocationManagerUseCase(locationManagerRepository: locationManagerRepository)
     }
 
     func makeHomeViewController() -> HomeViewController {
-        let useCase = HomeUseCase(
+        let homeUseCase = HomeUseCase(
             kickboardRepository: kickboardRepository,
             localRepository: localRepository,
             rideHistoryRepository: rideHistoryRepository
         )
-        let viewModel = HomeViewModel(useCase: useCase)
+        let viewModel = HomeViewModel(
+            homeUseCase: homeUseCase,
+            locationManagerUseCase: locationManagerUseCase
+        )
         return HomeViewController(viewModel: viewModel)
     }
 
     func makeRegisterViewController() -> RegisterViewController {
-        let useCase = RegisterUseCase(
+        let registerUseCase = RegisterUseCase(
             brandRepository: brandRepository,
             kickboardRepository: kickboardRepository
         )
-        let viewModel = RegisterViewModel(useCase: useCase)
+
+        let viewModel = RegisterViewModel(
+            registerUseCase: registerUseCase,
+            locationManagerUseCase: locationManagerUseCase
+        )
+
         return RegisterViewController(viewModel: viewModel)
     }
     
