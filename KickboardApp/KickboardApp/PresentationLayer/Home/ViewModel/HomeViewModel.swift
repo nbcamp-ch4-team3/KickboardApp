@@ -5,19 +5,20 @@
 //  Created by 송규섭 on 4/30/25.
 //
 
-import Foundation
+import UIKit
 import CoreLocation
 
 protocol HomeViewModelDelegate: AnyObject {
-    func didFailWithError(_ error: AppError)
-    func didUpdateKickboards(kickboards: [Kickboard])
-    func didUpdateLocals(locals: [Local])
+    func didUpdateLocation(_ location: CLLocation)
+    func didRequestLocationServiceAlert(_ alert: UIAlertController)
     func didUpdateSelectedKickboard(kickboard: Kickboard)
     func didSaveRideHistory()
+    func didUpdateSerachResult(locals: [Local])
 }
 
 final class HomeViewModel: ViewModelProtocol {
-    private let useCase: HomeUseCaseProtocol
+    private let locationManagerUseCase: LocationManagerUseCaseProtocol
+    private let homeUseCase: HomeUseCaseProtocol
     weak var delegate: HomeViewModelDelegate?
 
     var mockKickboards: [Kickboard] = []
@@ -37,8 +38,14 @@ final class HomeViewModel: ViewModelProtocol {
         case saveRideHistory(RideHistory)
     }
 
-    init(useCase: HomeUseCaseProtocol) {
-        self.useCase = useCase
+    init(
+        homeUseCase: HomeUseCaseProtocol,
+        locationManagerUseCase: LocationManagerUseCaseProtocol
+    ) {
+        self.homeUseCase = homeUseCase
+        self.locationManagerUseCase = locationManagerUseCase
+
+        locationManagerUseCase.addDelegate(self)
 
         action = {[weak self] action in
             guard let self else { return }
@@ -133,8 +140,8 @@ final class HomeViewModel: ViewModelProtocol {
     private func fetchSearchResult(query: String) {
         Task {
             do {
-                let locals = try await useCase.fetchSearchResult(query: query)
-                delegate?.didUpdateLocals(locals: locals)
+                let locals = try await homeUseCase.fetchSearchResult(query: query)
+                delegate?.didUpdateSerachResult(locals: locals)
             } catch {
                 delegate?.didFailWithError(AppError(error))
             }
@@ -148,5 +155,15 @@ final class HomeViewModel: ViewModelProtocol {
         } catch {
             delegate?.didFailWithError(AppError(error))
         }
+    }
+}
+
+extension HomeViewModel: LocationManagerRepositoryDelegate {
+    func didUpdateLocation(_ location: CLLocation) {
+        delegate?.didUpdateLocation(location)
+    }
+
+    func showRequestLocationServiceAlert(_ alertController: UIAlertController) {
+        delegate?.didRequestLocationServiceAlert(alertController)
     }
 }

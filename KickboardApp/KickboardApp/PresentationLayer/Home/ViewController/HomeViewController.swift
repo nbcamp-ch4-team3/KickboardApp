@@ -13,7 +13,6 @@ import FittedSheets
 final class HomeViewController: UIViewController {
     private let homeView = HomeView()
     private let viewModel: HomeViewModel
-    let locationManager = CLLocationManager()
 
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -31,7 +30,6 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        locationManager.delegate = self
         homeView.delegate = self
         viewModel.delegate = self
 
@@ -246,9 +244,10 @@ extension HomeViewController: HomeViewModelDelegate {
         }
     }
 
-    func didUpdateLocals(locals: [Local]) {
+extension HomeViewController: HomeViewModelDelegate {
+
+    func didUpdateSerachResult(locals: [Local]) {
         DispatchQueue.main.async {
-            print("didUpdateLocals: \(locals)")
             self.homeView.setSearchResult(locals: locals)
         }
     }
@@ -256,6 +255,22 @@ extension HomeViewController: HomeViewModelDelegate {
     func didFailWithError(_ error: AppError) {
         DispatchQueue.main.async {
             self.showErrorAlert(error: error)
+        }
+    }
+
+    func didUpdateLocation(_ location: CLLocation) {
+        let userLocation = NMGLatLng(
+            lat: location.coordinate.latitude,
+            lng: location.coordinate.longitude
+        )
+        DispatchQueue.main.async {
+            self.homeView.updateUserOverlay(to: userLocation)
+        }
+    }
+
+    func didRequestLocationServiceAlert(_ alert: UIAlertController) {
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
         }
     }
 }

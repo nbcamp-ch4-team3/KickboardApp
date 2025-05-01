@@ -13,7 +13,6 @@ protocol HomeViewDelegate: AnyObject {
     func didTapMarkerVisibleButton()
     func didTapReturnButton()
     func didTapSearchButton(with textField: UITextField)
-    func didSelectLocal(with local: Local)
 }
 
 final class HomeView: UIView {
@@ -64,6 +63,11 @@ final class HomeView: UIView {
         searchResultTableView.reloadData()
     }
 
+    func updateUserOverlay(to location: NMGLatLng) {
+        naverMapView.mapView.locationOverlay.location = location
+        moveCamera(to: location)
+    }
+
     func configureRentalStatusView(kickboard: Kickboard, startTime: String) {
         rideTimeLabel.text = "이용 시작 시간: \(startTime)"
         fareLabel.text = "분당 \(kickboard.brand.pricePerMinute)원"
@@ -81,7 +85,10 @@ private extension HomeView {
     }
 
     func setStyle() {
-        naverMapView.showLocationButton = true
+        naverMapView.do {
+            $0.showLocationButton = true
+            $0.mapView.locationOverlay.hidden = false
+        }
 
         searchTextField.do {
             $0.layer.cornerRadius = 10
@@ -281,7 +288,20 @@ extension HomeView: UITableViewDelegate {
         let local = searchResult[indexPath.row]
         searchTextField.text = local.title
         searchResultTableView.isHidden = true
-        delegate?.didSelectLocal(with: local)
+
+        let cameraUpdate = NMGLatLng(
+            lat: local.latitude,
+            lng: local.longitude
+        )
+        moveCamera(to: cameraUpdate)
+
+
+        //TODO: 검색으로 선택한 위치의 마커는 captionTitle이 존재, 지도 상에 하나만 존재해야 되므로 제거함 -> 지도 상의 마커에 대한 업데이트 필요
+        markers.removeAll(where: {$0.captionText != "" })
+        let marker = NMFMarker()
+        marker.captionText = local.title
+        marker.position = cameraUpdate
+        marker.mapView = naverMapView.mapView
     }
 }
 
@@ -292,13 +312,9 @@ extension HomeView {
     }
 
     func moveCamera(to update: NMGLatLng) {
-        let cameraUpdate = NMFCameraUpdate(scrollTo: update)
+        let cameraUpdate = NMFCameraUpdate(scrollTo: update, zoomTo: 15)
         cameraUpdate.animation = .easeIn
 
-        let locationOverlay = naverMapView.mapView.locationOverlay
-        locationOverlay.location = update
-        locationOverlay.hidden = false
-        
         naverMapView.mapView.moveCamera(cameraUpdate)
     }
 
