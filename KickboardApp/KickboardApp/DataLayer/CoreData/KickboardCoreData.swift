@@ -12,6 +12,7 @@ protocol KickboardCoreDataProtocol {
     func readAllData() throws -> [KickboardEntity]
     func updateLocation(id: UUID, latitude: Double, longitude: Double) throws
     func deleteAllData() throws
+    func findKickboard(with id: UUID) throws -> KickboardEntity?
 }
 
 final class KickboardCoreData: KickboardCoreDataProtocol {
@@ -61,6 +62,12 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
         } catch {
             throw CoreDataError.updateError(error)
         }
+    }
+
+    func findKickboard(with id: UUID) throws -> KickboardEntity? {
+        let fetchRequest = KickboardEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        return try viewContext.fetch(fetchRequest).first
     }
 }
 
