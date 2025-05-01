@@ -11,6 +11,7 @@ protocol HomeUseCaseProtocol {
     func getAllKickboard() throws -> [Kickboard]
     func fetchSearchResult(query: String) async throws -> [Local]
     func saveRideHistory(with rideHistory: RideHistory) throws -> Void
+    func updateKickboardLocation(id: UUID, latitude: Double, longitude: Double) throws
 }
 
 final class HomeUseCase: HomeUseCaseProtocol {
@@ -38,5 +39,9 @@ final class HomeUseCase: HomeUseCaseProtocol {
 
     func saveRideHistory(with rideHistory: RideHistory) throws -> Void {
         try rideHistoryRepository.saveRideHistory(with: rideHistory)
+    }
+
+    func updateKickboardLocation(id: UUID, latitude: Double, longitude: Double) throws {
+        try kickboardRepository.updateLocation(id: id, latitude: latitude, longitude: longitude)
     }
 }
