@@ -35,18 +35,28 @@ final class HomeViewController: UIViewController {
         homeView.delegate = self
         viewModel.delegate = self
 
-//        homeViewModel.generateMockKickboards()
-        try? loadData()
+        viewModel.action?(.fetchKickboards)
+
+        restoreIsRidingState()
     }
 
-    private func loadData() throws {
-        do {
-            try viewModel.fetchAllKickboards()
-        } catch {
-            throw CoreDataError.readError(error)
+    // 앱 진입 시 이용 중인지에 대해 분기 처리
+    private func restoreIsRidingState() {
+        let isRiding = UserDefaults.standard.bool(forKey: "isRiding")
+
+        if isRiding,
+           let data = UserDefaults.standard.data(forKey: "kickboard"),
+           let startTime = UserDefaults.standard.object(forKey: "startTime") as? Date,
+           let kickboard = try? JSONDecoder().decode(Kickboard.self, from: data) {
+
+            let startTimeString = DateUtility.shared.toHourAndMinuteString(from: startTime)
+            homeView.configureRentalStatusView(kickboard: kickboard, startTime: startTimeString)
+        } else {
+            handleKickboardReturn()
         }
-    }
 
+        homeView.switchView(isRiding: isRiding)
+    }
 }
 
 private extension HomeViewController {
@@ -114,6 +124,39 @@ private extension HomeViewController {
             self.homeView.moveCamera(to: cameraUpdate)
         }
     }
+
+    func handleKickboardReturn() {
+        homeView.switchView(isRiding: false)
+        homeView.setMarkersByState(isRented: false)
+        viewModel.selectedKickboard = nil
+
+        if UserDefaults.standard.bool(forKey: "isRiding"),
+           let startTime = UserDefaults.standard.object(forKey: "startTime") as? Date,
+           let data = UserDefaults.standard.data(forKey: "kickboard"),
+           let kickboard = try? JSONDecoder().decode(Kickboard.self, from: data) {
+            let endTime = Date.now
+            let timeDiff = DateUtility.shared.minutesBetween(start: startTime, end: endTime)
+            let totalPrice = timeDiff * kickboard.brand.pricePerMinute
+
+            let rideHistory = RideHistory(
+                kickboard: kickboard,
+                startTime: startTime,
+                endTime: endTime,
+                price: totalPrice
+            )
+
+            viewModel.action?(.saveRideHistory(rideHistory))
+        }
+
+        // 기존 저장되어있던 대여 정보 제거
+        let keys = [
+            "isRiding",
+            "startTime",
+            "kickboard",
+        ]
+        keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
+    }
+
 }
 
 
@@ -121,41 +164,20 @@ private extension HomeViewController {
 
 extension HomeViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let currentLocation = locations.last else { print("마지막 위치 정보 없음"); return }
-        let filteredKickboards = viewModel.nearbyKickboards(from: currentLocation, within: 300)
-        DispatchQueue.main.async {
-            self.homeView.updateKickboardMarkers(with: filteredKickboards)
-        }
-    }
 
+    }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-//        DispatchQueue.global().async {
+        DispatchQueue.global().async {
             self.askLocationPermission()
-//        }
+        }
     }
-
 }
 
 extension HomeViewController: HomeViewDelegate {
     func didTapSearchButton(with textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else { return }
         viewModel.action?(.fetchSearchResult(text))
-    }
-    
-    func didTapMarker(with kickboard: Kickboard) {
-        let vc = HomeBottomSheetViewController()
-        vc.kickboard = kickboard
-
-        var options = SheetOptions()
-        // 라이브러리 기본 옵션을 취소하는 설정들
-        options.shrinkPresentingViewController = false
-        options.useFullScreenMode = false
-        options.shouldExtendBackground = false
-
-        let sheetVC = SheetViewController(controller: vc, sizes: [.intrinsic], options: options) // 내부 컴포넌트 크기에 의한 높이 계산
-
-        present(sheetVC, animated: true)
     }
 
     func didSelectLocal(with local: Local) {
@@ -167,9 +189,62 @@ extension HomeViewController: HomeViewDelegate {
             self.homeView.moveCamera(to: cameraUpdate)
         }
     }
+
+    func didTapMarker(with kickboard: Kickboard) {
+        viewModel.selectedKickboard = kickboard
+    }
+
+    func didTapMarkerVisibleButton() {
+        homeView.toggleMarkersVisibility()
+    }
+
+    func didTapReturnButton() {
+        let alert = UIAlertController(
+            title: "킥보드를 반납하시겠어요?",
+            message: "이용이 종료되며, 반납 처리 및 요금 정산이 진행됩니다.\n반납하시겠습니까?",
+            preferredStyle: .alert
+        )
+        let confirm = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.handleKickboardReturn()
+            self.dismiss(animated: true)
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(confirm)
+        alert.addAction(cancel)
+
+        present(alert, animated: true)
+    }
 }
 
 extension HomeViewController: HomeViewModelDelegate {
+    func didSaveRideHistory() {
+        print("saveRideHistory 저장 완료")
+    }
+    
+    func didUpdateSelectedKickboard(kickboard: Kickboard) {
+        let vc = HomeBottomSheetViewController()
+        vc.delegate = self
+
+        guard let selectedKickboard = viewModel.selectedKickboard else { return }
+        vc.configure(with: selectedKickboard)
+
+        var options = SheetOptions()
+        // 라이브러리 기본 옵션을 취소하는 설정들
+        options.shrinkPresentingViewController = false
+        options.useFullScreenMode = false
+        options.shouldExtendBackground = false
+
+        let sheetVC = SheetViewController(controller: vc, sizes: [.intrinsic], options: options) // 내부 컴포넌트 크기에 의한 높이 계산
+
+        present(sheetVC, animated: true)
+    }
+    
+    func didUpdateKickboards(kickboards: [Kickboard]) {
+        DispatchQueue.main.async {
+            self.homeView.updateKickboardMarkers(with: kickboards)
+        }
+    }
 
     func didUpdateLocals(locals: [Local]) {
         DispatchQueue.main.async {
@@ -181,6 +256,31 @@ extension HomeViewController: HomeViewModelDelegate {
     func didFailWithError(_ error: AppError) {
         DispatchQueue.main.async {
             self.showErrorAlert(error: error)
+        }
+    }
+}
+
+extension HomeViewController: HomeBottomSheetVCDelegate {
+    func didBottomSheetDismissed() {
+        viewModel.selectedKickboard = nil
+    }
+    
+    func didTapConfirmButton() {
+        homeView.switchView(isRiding: true)
+        homeView.setMarkersByState(isRented: true)
+
+        guard let selectedKickboard = viewModel.selectedKickboard else { return }
+        let startTime = Date.now
+        let startTimeToString = DateUtility.shared.toHourAndMinuteString(from: startTime)
+        homeView.configureRentalStatusView(
+            kickboard: selectedKickboard,
+            startTime: startTimeToString
+        )
+
+        UserDefaults.standard.set(true, forKey: "isRiding")
+        UserDefaults.standard.set(startTime, forKey: "startTime")
+        if let encoded = try? JSONEncoder().encode(selectedKickboard) {
+            UserDefaults.standard.set(encoded, forKey: "kickboard")
         }
     }
 }

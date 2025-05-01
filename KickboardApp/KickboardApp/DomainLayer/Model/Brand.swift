@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Brand {
+struct Brand: Codable {
     let title: String
     let imageName: String
     let distancePerBatteryUnit: Double

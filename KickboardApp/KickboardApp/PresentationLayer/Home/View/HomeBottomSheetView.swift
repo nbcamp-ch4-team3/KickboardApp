@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol HomeBottomSheetViewDelegate: AnyObject {
+    func didTapRentButton()
+}
+
 final class HomeBottomSheetView: UIView {
+    weak var delegate: HomeBottomSheetViewDelegate?
+
     private let kbBrandLabel = UILabel()
     private let kbModelLabel = UILabel()
     private let kbRemainedBatteryView = RemainedBatteryView()
@@ -135,7 +141,11 @@ private extension HomeBottomSheetView {
     }
 
     func setAction() {
+        rentButton.addTarget(self, action: #selector(didTapRentButton), for: .touchUpInside)
+    }
 
+    @objc func didTapRentButton() {
+        delegate?.didTapRentButton()
     }
 }
 
