@@ -15,12 +15,14 @@ struct DIContainer {
     private let kickboardRepository: KickboardRepositoryProtocol
     private let userRepository: UserRepositoryProtocol
     private let localRepository: LocalRepositoryProtocol
+    private let rideHistoryRepository: RideHistoryRepositoryProtocol
 
     init() {
         let brandCoreData = BrandCoreData()
         let kickboardCoreData = KickboardCoreData()
         let userCoreData = UserCoreData()
         let networkService = NetworkService()
+        let rideHistoryCoreData = RideHistoryCoreData()
 
         brandRepository = BrandRepository(coreData:brandCoreData)
         kickboardRepository = KickboardRepository(
@@ -30,12 +32,18 @@ struct DIContainer {
         )
         userRepository = UserRepository(coreData:userCoreData)
         localRepository = LocalRepository(service: networkService)
+        rideHistoryRepository = RideHistoryRepository(
+            kickboardCoreData: kickboardCoreData,
+            rideHistoryCoreData: rideHistoryCoreData,
+            userCoreData: userCoreData
+        )
     }
 
     func makeHomeViewController() -> HomeViewController {
         let useCase = HomeUseCase(
             kickboardRepository: kickboardRepository,
-            localRepository: localRepository
+            localRepository: localRepository,
+            rideHistoryRepository: rideHistoryRepository
         )
         let viewModel = HomeViewModel(useCase: useCase)
         return HomeViewController(viewModel: viewModel)
