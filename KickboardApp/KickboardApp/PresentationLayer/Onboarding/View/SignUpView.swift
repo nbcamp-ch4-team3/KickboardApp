@@ -31,6 +31,23 @@ final class SignUpView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func configure(with status: SignUpStatus) {
+        titleLabel.text = status.title
+        descriptionLabel.text = status.description
+        
+        switch status {
+        case .id:
+            textField.configure(type: .signUpId)
+        case .password:
+            textField.configure(type: .signUpPassword)
+            confirmTextField.isHidden = false
+            confirmTextField.configure(type: .signUpConfirmPassword)
+        case .nickname:
+            button.configure(type: .signUp)
+            textField.configure(type: .nickname)
+        }
+    }
 }
 
 extension SignUpView {
@@ -67,7 +84,7 @@ extension SignUpView {
         
         descriptionLabel.do {
             $0.text = "아이디는 영문 소문자로 시작하는 5~20자\n길이의 영문 소문자, 숫자 조합이어야 합니다."
-            $0.font = .font(.pretendardRegular, ofSize: 14)
+            $0.font = .font(.pretendardRegular, ofSize: 12)
             $0.numberOfLines = 0
         }
         
@@ -75,6 +92,8 @@ extension SignUpView {
             $0.axis = .vertical
             $0.spacing = 20
         }
+        
+        confirmTextField.isHidden = true
     }
     
     func setConstraints() {
@@ -92,7 +111,7 @@ extension SignUpView {
         descriptionLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(20)
             $0.leading.equalToSuperview().offset(50)
-            $0.width.equalTo(250)
+            $0.width.equalTo(300)
         }
         
         textField.snp.makeConstraints {

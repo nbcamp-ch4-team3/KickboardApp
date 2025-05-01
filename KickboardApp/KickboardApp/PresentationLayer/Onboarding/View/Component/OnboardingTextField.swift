@@ -39,7 +39,7 @@ enum OnboardingTextFieldType {
 }
 
 final class OnboardingTextField: UITextField {
-    let type: OnboardingTextFieldType
+    var type: OnboardingTextFieldType
     
     init(type: OnboardingTextFieldType) {
         self.type = type
@@ -60,5 +60,10 @@ final class OnboardingTextField: UITextField {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(type: OnboardingTextFieldType) {
+        placeholder = type.placeholder
+        isSecureTextEntry = type.isSecureTextEntry
     }
 }

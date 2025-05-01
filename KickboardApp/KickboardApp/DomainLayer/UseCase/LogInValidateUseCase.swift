@@ -7,20 +7,25 @@
 
 import Foundation
 
+protocol LogInValidateUseCaseProtocol {
+    func validateId(_ id: String) throws -> Bool
+    func validatePassword(_ password: String, for id: String) throws -> Bool
+}
+
 class LogInValidateUseCase: LogInValidateUseCaseProtocol {
-    private let userCoreData: UserCoreDataProtocol
+    private let userRepository: UserRepositoryProtocol
     
-    init(userCoreData: UserCoreDataProtocol) {
-        self.userCoreData = userCoreData
+    init(userRepository: UserRepositoryProtocol) {
+        self.userRepository = userRepository
     }
     
     // 코어 데이터에 해당 id가 있는지 확인
     func validateId(_ id: String) throws -> Bool {
-        try userCoreData.isExistUser(id)
+        try userRepository.isExistUser(id)
     }
     
     // 해당 id에 대해 비밀번호가 맞는지 확인
     func validatePassword(_ password: String, for id: String) throws -> Bool {
-        try userCoreData.validatePassword(password, for: id)
+        try userRepository.validatePassword(password, for: id)
     }
 }

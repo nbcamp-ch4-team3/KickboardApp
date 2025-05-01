@@ -10,6 +10,7 @@ protocol UserCoreDataProtocol {
     func findUser() throws -> UserEntity?
     func isExistUser(_ id: String) throws -> Bool
     func validatePassword(_ password: String, for id: String) throws -> Bool
+    func saveUser(_ user: User) throws
 }
 
 final class UserCoreData: UserCoreDataProtocol {
@@ -42,12 +43,10 @@ final class UserCoreData: UserCoreDataProtocol {
 
         do {
             let users = try viewContext.fetch(fetchRequest)
-            if !users.isEmpty { return true }
+            return !users.isEmpty
         } catch {
             throw CoreDataError.readError(error)
         }
-
-        return false
     }
 
     // 해당 id에 대해 비밀번호가 맞는지 확인
@@ -58,16 +57,28 @@ final class UserCoreData: UserCoreDataProtocol {
         do {
             let users = try viewContext.fetch(fetchRequest)
 
-            for user in users {
-                if user.password == password {
-                    return true
-                }
+            guard let user = users.first else {
+                throw CoreDataError.entityNotFound("validatePassword - nil Data")
             }
+            
+            return user.password == password
         } catch {
             throw CoreDataError.readError(error)
         }
-
-        return false
+    }
+    
+    // 유저 데이터 저장
+    func saveUser(_ user: User) throws {
+        let userEntity = UserEntity(context: viewContext)
+        userEntity.id = user.id
+        userEntity.password = user.password
+        userEntity.nickname = user.nickname
+        
+        do {
+            try viewContext.save()
+        } catch {
+            throw CoreDataError.saveError(error)
+        }
     }
 }
 

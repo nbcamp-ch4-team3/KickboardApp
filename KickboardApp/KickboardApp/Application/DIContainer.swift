@@ -35,4 +35,16 @@ struct DIContainer {
         let viewModel = RegisterViewModel(useCase: useCase)
         return RegisterViewController(viewModel: viewModel)
     }
+    
+    func makeLogInViewController() -> LogInViewController {
+        let useCase = LogInValidateUseCase(userRepository: userRepository)
+        let viewModel = LogInViewModel(logInValidateUseCase: useCase)
+        return LogInViewController(viewModel: viewModel)
+    }
+    
+    func makeSignUpViewController() -> SignUpViewController {
+        let useCase = SignUpUseCase(userRepository: userRepository)
+        let viewModel = SignUpViewModel(signUpUseCase: useCase)
+        return SignUpViewController(status: .id, viewModel: viewModel)
+    }
 }
