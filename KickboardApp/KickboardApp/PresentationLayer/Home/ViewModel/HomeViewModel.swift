@@ -11,25 +11,30 @@ import CoreLocation
 protocol HomeViewModelDelegate: AnyObject {
     func didFailWithError(_ error: AppError)
     func didUpdateKickboards(kickboards: [Kickboard])
-}
-
-protocol HomeViewModelDelegate: AnyObject {
     func didUpdateLocals(locals: [Local])
-    func didFailWithError(_ error: AppError)
+    func didUpdateSelectedKickboard(kickboard: Kickboard)
+    func didSaveRideHistory()
 }
 
-final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
+final class HomeViewModel: ViewModelProtocol {
     private let useCase: HomeUseCaseProtocol
     weak var delegate: HomeViewModelDelegate?
 
     var mockKickboards: [Kickboard] = []
     var kickboards: [Kickboard] = []
-    weak var delegate: HomeViewModelDelegate?
+    var selectedKickboard: Kickboard? {
+        didSet {
+            guard let selectedKickboard else { return }
+            delegate?.didUpdateSelectedKickboard(kickboard: selectedKickboard)
+        }
+    }
 
     var action: ((Action) -> Void)?
 
     enum Action {
+        case fetchSearchResult(String)
         case fetchKickboards
+        case saveRideHistory(RideHistory)
     }
 
     init(useCase: HomeUseCaseProtocol) {
@@ -38,29 +43,16 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
         action = {[weak self] action in
             guard let self else { return }
             switch action {
+            case .fetchSearchResult(let query):
+                self.fetchSearchResult(query: query)
             case .fetchKickboards:
                 do {
                     try self.fetchKickboards()
                 } catch {
                     self.delegate?.didFailWithError(AppError(error))
                 }
-            }
-        }
-    }
-
-    var action: ((Action) -> Void)?
-
-    enum Action {
-        case fetchSearchResult(String)
-    }
-
-    init(useCase: HomeUseCaseProtocol) {
-        self.useCase = useCase
-
-        action = {[weak self] action in
-            switch action {
-            case .fetchSearchResult(let query):
-                self?.fetchSearchResult(query: query)
+            case .saveRideHistory(let history):
+                self.saveRideHistory(with: history)
             }
         }
     }
@@ -146,6 +138,15 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
             } catch {
                 delegate?.didFailWithError(AppError(error))
             }
+        }
+    }
+
+    private func saveRideHistory(with rideHistory: RideHistory) {
+        do {
+            _ = try useCase.saveRideHistory(with: rideHistory)
+            delegate?.didSaveRideHistory()
+        } catch {
+            delegate?.didFailWithError(AppError(error))
         }
     }
 }
