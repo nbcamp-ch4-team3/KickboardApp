@@ -25,7 +25,8 @@ extension TabBarController {
         let registerViewController = diContainer.makeRegisterViewController()
         registerViewController.tabBarItem = UITabBarItem(title: "등록", image: UIImage(systemName: "plus"), tag: 1)
         
-        let myPageViewController = ViewController()
+        let vc = diContainer.makeMyPageViewController()
+        let myPageViewController = UINavigationController(rootViewController: vc)
         myPageViewController.tabBarItem = UITabBarItem(title: "마이페이지", image: UIImage(systemName: "person.circle"), tag: 2)
         
         viewControllers = [homeViewController, registerViewController, myPageViewController]

@@ -37,4 +37,13 @@ enum PageType: String {
             return "추가 입력 폼 : "
         }
     }
+    
+    var emptyMessage: String {
+        switch self {
+        case .history:
+            return "이용 내역이 없어요ㅠㅠ"
+        case .kickboard:
+            return "등록한 킥보드가 없어요ㅠㅠ"
+        }
+    }
 }

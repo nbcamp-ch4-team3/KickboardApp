@@ -9,15 +9,12 @@ import UIKit
 
 final class DetailView: UIView {
     private let tableView = UITableView()
-    private let data: [PageType] = [.history, .history, .history, .history]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
         
         tableView.register(InfoCardCell.self, forCellReuseIdentifier: InfoCardCell.reuseIdentifier)
-        tableView.dataSource = self
-        tableView.delegate = self
     }
     
     @available(*, unavailable, message: "storyboard is not supported.")
@@ -57,29 +54,29 @@ private extension DetailView {
     }
 }
 
-extension DetailView: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+extension DetailView {
+    func tableViewConfigure(delegate: UITableViewDelegate, dataSource: UITableViewDataSource) {
+        tableView.dataSource = dataSource
+        tableView.delegate = delegate
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: InfoCardCell.reuseIdentifier,
-            for: indexPath
-        ) as? InfoCardCell else { return UITableViewCell() }
-        
-        cell.selectionStyle = .none
-        cell.setType(data[indexPath.row])
-        return cell
+    func tableViewReloadData() {
+        tableView.reloadData()
     }
     
-    
-}
-
-extension DetailView: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 147
+    func updateBackgroundView(_ isEmpty: Bool) {
+        if isEmpty {
+            let label = UILabel()
+            
+            label.do {
+                $0.text = "검색 결과 없음"
+                $0.textColor = .systemGray
+                $0.font = .systemFont(ofSize: 16, weight: .medium)
+                $0.textAlignment = .center
+            }
+            tableView.backgroundView = label
+        } else {
+            tableView.backgroundView = nil
+        }
     }
-    
-    
 }
