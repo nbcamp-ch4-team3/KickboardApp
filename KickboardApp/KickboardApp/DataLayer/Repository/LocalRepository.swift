@@ -15,8 +15,8 @@ final class LocalRepository: LocalRepositoryProtocol {
         self.service = service
     }
 
-    func fetchLocalInfo(query: String) async throws -> [Local] {
-        return try await service.fetchLocalInfo(query: query).items
+    func fetchSearchResult(query: String) async throws -> [Local] {
+        return try await service.fetchSearchResult(query: query).items
             .compactMap { local -> Local? in
                 guard let lng = Double(local.mapx),
                       let lat = Double(local.mapy)

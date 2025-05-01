@@ -8,13 +8,13 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    func fetchLocalInfo(query: String) async throws -> LocalDTO
+    func fetchSearchResult(query: String) async throws -> LocalDTO
 }
 
 final class NetworkService: NetworkServiceProtocol {
     private let baseURL = "https://openapi.naver.com"
 
-    func fetchLocalInfo(query: String) async throws -> LocalDTO {
+    func fetchSearchResult(query: String) async throws -> LocalDTO {
         let path = "/v1/search/local.json"
         guard var components = URLComponents(string: baseURL + path) else {
             throw NetworkError.invalidURL(url: baseURL + path)
@@ -32,7 +32,6 @@ final class NetworkService: NetworkServiceProtocol {
 
         var request = URLRequest(url: url)
 
-        //TODO: 헤더 추가
         if let secret = Bundle.main.infoDictionary?["SearchClientSecret"] as? String,
            let clientId = Bundle.main.infoDictionary?["SearchClientId"] as? String {
             request.addValue(clientId, forHTTPHeaderField: "X-Naver-Client-Id")

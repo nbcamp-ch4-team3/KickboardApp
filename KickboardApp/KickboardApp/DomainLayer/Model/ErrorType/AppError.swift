@@ -12,7 +12,7 @@ protocol AppErrorProtocol: LocalizedError {
     var debugDescription: String { get }
 }
 
-enum AppError: LocalizedError {
+enum AppError: AppErrorProtocol {
     case networkError(NetworkError)
     case coreDataError(CoreDataError)
     case userDefaultsError(UserDefaultsError)

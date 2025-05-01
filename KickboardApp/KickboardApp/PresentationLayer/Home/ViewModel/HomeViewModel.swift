@@ -30,7 +30,7 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
     var action: ((Action) -> Void)?
 
     enum Action {
-        case fetchLocalInfo(String)
+        case fetchSearchResult(String)
     }
 
     init(useCase: HomeUseCaseProtocol) {
@@ -38,8 +38,8 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
 
         action = {[weak self] action in
             switch action {
-            case .fetchLocalInfo(let query):
-                self?.fetchLocalInfo(query: query)
+            case .fetchSearchResult(let query):
+                self?.fetchSearchResult(query: query)
             }
         }
     }
@@ -116,10 +116,10 @@ final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
         }
     }
 
-    private func fetchLocalInfo(query: String) {
+    private func fetchSearchResult(query: String) {
         Task {
             do {
-                let locals = try await useCase.fetchLocalInfo(query: query)
+                let locals = try await useCase.fetchSearchResult(query: query)
                 delegate?.didUpdateLocals(locals: locals)
             } catch {
                 delegate?.didFailWithError(AppError(error))

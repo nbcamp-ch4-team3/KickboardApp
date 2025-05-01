@@ -9,6 +9,7 @@ import Foundation
 
 protocol HomeUseCaseProtocol {
     func getAllKickboard() throws -> [Kickboard]
+    func fetchSearchResult(query: String) async throws -> [Local]
 }
 
 final class HomeUseCase: HomeUseCaseProtocol {
@@ -33,4 +34,7 @@ final class HomeUseCase: HomeUseCaseProtocol {
     }
     func fetchLocalInfo(query: String) async throws -> [Local] {
         try await localRepository.fetchLocalInfo(query: query)
+
+    func fetchSearchResult(query: String) async throws -> [Local] {
+        try await localRepository.fetchSearchResult(query: query)
     }

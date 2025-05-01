@@ -149,7 +149,7 @@ extension HomeViewController: CLLocationManagerDelegate {
 extension HomeViewController: HomeViewDelegate {
     func didTapSearchButton(with textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else { return }
-        homeViewModel.action?(.fetchLocalInfo(text))
+        homeViewModel.action?(.fetchSearchResult(text))
     }
     
     func didTapMarker(with kickboard: Kickboard) {

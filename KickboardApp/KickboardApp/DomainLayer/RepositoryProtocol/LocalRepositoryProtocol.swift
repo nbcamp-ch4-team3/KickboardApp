@@ -8,5 +8,5 @@
 import Foundation
 
 protocol LocalRepositoryProtocol {
-    func fetchLocalInfo(query: String) async throws -> [Local]
+    func fetchSearchResult(query: String) async throws -> [Local]
 }
