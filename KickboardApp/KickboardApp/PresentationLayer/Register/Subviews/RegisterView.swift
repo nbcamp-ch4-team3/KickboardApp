@@ -28,16 +28,15 @@ final class RegisterView: UIView {
         settingView.delegate = delegate
     }
 
-    func setCameraDelegate(_ delegate: NMFMapViewCameraDelegate) {
-        mapView.addCameraDelegate(delegate: delegate)
-    }
-
     func setDataSource(brands: [Brand]) {
         settingView.setDataSource(brands: brands)
     }
 
-    func configure(location: NMGLatLng) {
-        settingView.configure(location: location)
+    func moveCamera(to update: NMGLatLng) {
+        let cameraUpdate = NMFCameraUpdate(scrollTo: update, zoomTo: 15)
+        cameraUpdate.animation = .easeIn
+
+        mapView.moveCamera(cameraUpdate)
     }
 }
 
@@ -46,6 +45,7 @@ private extension RegisterView {
         setHierarchy()
         setStyle()
         setConstraints()
+        setProtocol()
     }
 
     func setHierarchy() {
@@ -87,5 +87,16 @@ private extension RegisterView {
             make.bottom.equalTo(safeAreaLayoutGuide)
             make.directionalHorizontalEdges.equalToSuperview()
         }
+    }
+
+    func setProtocol() {
+        mapView.addCameraDelegate(delegate: self)
+    }
+}
+
+extension RegisterView: NMFMapViewCameraDelegate {
+    func mapViewCameraIdle(_ mapView: NMFMapView) {
+        let location = mapView.cameraPosition.target
+        settingView.configure(location: location)
     }
 }

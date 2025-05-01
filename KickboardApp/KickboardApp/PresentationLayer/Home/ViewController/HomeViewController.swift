@@ -13,7 +13,6 @@ import FittedSheets
 final class HomeViewController: UIViewController {
     private let homeView = HomeView()
     private let viewModel: HomeViewModel
-    let locationManager = CLLocationManager()
 
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -31,13 +30,15 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        locationManager.delegate = self
         homeView.delegate = self
         viewModel.delegate = self
 
-        viewModel.action?(.fetchKickboards)
-
         restoreIsRidingState()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.action?(.fetchKickboards)
     }
 
     // 앱 진입 시 이용 중인지에 대해 분기 처리
@@ -60,70 +61,6 @@ final class HomeViewController: UIViewController {
 }
 
 private extension HomeViewController {
-    func askLocationPermission() {
-        guard CLLocationManager.locationServicesEnabled() else {
-            showRequestLocationServiceAlert()
-            return
-        }
-
-        let authorizationStatus = locationManager.authorizationStatus
-
-        checkUserCurrentLocationAuthorization(authorizationStatus)
-    }
-
-    func checkUserCurrentLocationAuthorization(_ status: CLAuthorizationStatus) {
-        switch status {
-        case .notDetermined:
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.requestWhenInUseAuthorization()
-        case .denied, .restricted:
-            showRequestLocationServiceAlert()
-        case .authorizedWhenInUse, .authorizedAlways:
-            print("authroizedWhenInUse")
-            locationManager.startUpdatingLocation()
-            updateToCurrentPosition()
-        default:
-            return
-        }
-    }
-
-    func showRequestLocationServiceAlert() {
-        let requestLocationServiceAlert = UIAlertController(
-            title: "위치 정보 이용",
-            message: "위치 서비스를 사용할 수 없습니다.\n디바이스의 '설정 > 개인정보 보호'에서 위치 서비스를 켜주세요.",
-            preferredStyle: .alert
-        )
-        let moveToSetting = UIAlertAction(title: "설정으로 이동", style: .destructive) { _ in
-            // TODO: - 앱 설정 맨 첫 페이지로 이동하는 방법 찾아야함. 앱 scheme,
-            if let appSetting = URL(string: UIApplication.openSettingsURLString) {
-                print(appSetting)
-                Task {
-                    await UIApplication.shared.open(appSetting)
-                }
-
-            }
-        }
-        let cancel = UIAlertAction(title: "취소", style: .default) { _ in
-            return
-        }
-
-        requestLocationServiceAlert.addAction(cancel)
-        requestLocationServiceAlert.addAction(moveToSetting)
-
-        DispatchQueue.main.async {
-            self.present(requestLocationServiceAlert, animated: true)
-        }
-    }
-
-    func updateToCurrentPosition() {
-        let cameraUpdate = NMGLatLng(
-            lat: locationManager.location?.coordinate.latitude ?? 0,
-            lng: locationManager.location?.coordinate.longitude ?? 0
-        )
-        DispatchQueue.main.async {
-            self.homeView.moveCamera(to: cameraUpdate)
-        }
-    }
 
     func handleKickboardReturn() {
         homeView.switchView(isRiding: false)
@@ -157,21 +94,6 @@ private extension HomeViewController {
         keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
     }
 
-}
-
-
-// TODO: - 앱 실행 시 Location 권한 요청 -> 온보딩 구현 -> 로그인 후
-
-extension HomeViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-
-    }
-
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        DispatchQueue.global().async {
-            self.askLocationPermission()
-        }
-    }
 }
 
 extension HomeViewController: HomeViewDelegate {
@@ -218,10 +140,39 @@ extension HomeViewController: HomeViewDelegate {
 }
 
 extension HomeViewController: HomeViewModelDelegate {
+
+    func didUpdateSerachResult(locals: [Local]) {
+        DispatchQueue.main.async {
+            self.homeView.setSearchResult(locals: locals)
+        }
+    }
+
+    func didFailWithError(_ error: AppError) {
+        DispatchQueue.main.async {
+            self.showErrorAlert(error: error)
+        }
+    }
+
+    func didUpdateLocation(_ location: CLLocation) {
+        let userLocation = NMGLatLng(
+            lat: location.coordinate.latitude,
+            lng: location.coordinate.longitude
+        )
+        DispatchQueue.main.async {
+            self.homeView.updateUserOverlay(to: userLocation)
+        }
+    }
+
+    func didRequestLocationServiceAlert(_ alert: UIAlertController) {
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
+        }
+    }
+
     func didSaveRideHistory() {
         print("saveRideHistory 저장 완료")
     }
-    
+
     func didUpdateSelectedKickboard(kickboard: Kickboard) {
         let vc = HomeBottomSheetViewController()
         vc.delegate = self
@@ -239,23 +190,10 @@ extension HomeViewController: HomeViewModelDelegate {
 
         present(sheetVC, animated: true)
     }
-    
+
     func didUpdateKickboards(kickboards: [Kickboard]) {
         DispatchQueue.main.async {
             self.homeView.updateKickboardMarkers(with: kickboards)
-        }
-    }
-
-    func didUpdateLocals(locals: [Local]) {
-        DispatchQueue.main.async {
-            print("didUpdateLocals: \(locals)")
-            self.homeView.setSearchResult(locals: locals)
-        }
-    }
-
-    func didFailWithError(_ error: AppError) {
-        DispatchQueue.main.async {
-            self.showErrorAlert(error: error)
         }
     }
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    private let diContainer = DIContainer()
+    private let diContainer = DIContainer.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,5 +30,7 @@ extension TabBarController {
         myPageViewController.tabBarItem = UITabBarItem(title: "마이페이지", image: UIImage(systemName: "person.circle"), tag: 2)
         
         viewControllers = [homeViewController, registerViewController, myPageViewController]
+
+        self.tabBar.backgroundColor = .white
     }
 }

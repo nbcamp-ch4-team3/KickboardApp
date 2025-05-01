@@ -70,8 +70,8 @@ final class KickboardSettingView: UIView {
     }
 
     func configure(location: NMGLatLng) {
-        latitudeValueLabel.text = location.lat.formatted(toDecimalDigits: 4)
-        longitudeValueLabel.text = location.lng.formatted(toDecimalDigits: 4)
+        latitudeValueLabel.text = location.lat.formatted(toDecimalDigits: 6)
+        longitudeValueLabel.text = location.lng.formatted(toDecimalDigits: 6)
     }
 }
 

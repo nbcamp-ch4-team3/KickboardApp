@@ -13,11 +13,11 @@ protocol HomeViewDelegate: AnyObject {
     func didTapMarkerVisibleButton()
     func didTapReturnButton()
     func didTapSearchButton(with textField: UITextField)
-    func didSelectLocal(with local: Local)
 }
 
 final class HomeView: UIView {
     weak var delegate: HomeViewDelegate?
+    private var searchResultMarker: NMFMarker?
     private var markers: [NMFMarker] = []
     private var areMarkersVisible = true
 
@@ -64,6 +64,11 @@ final class HomeView: UIView {
         searchResultTableView.reloadData()
     }
 
+    func updateUserOverlay(to location: NMGLatLng) {
+        naverMapView.mapView.locationOverlay.location = location
+        moveCamera(to: location)
+    }
+
     func configureRentalStatusView(kickboard: Kickboard, startTime: String) {
         rideTimeLabel.text = "이용 시작 시간: \(startTime)"
         fareLabel.text = "분당 \(kickboard.brand.pricePerMinute)원"
@@ -81,7 +86,10 @@ private extension HomeView {
     }
 
     func setStyle() {
-        naverMapView.showLocationButton = true
+        naverMapView.do {
+            $0.showLocationButton = true
+            $0.mapView.locationOverlay.hidden = false
+        }
 
         searchTextField.do {
             $0.layer.cornerRadius = 10
@@ -281,7 +289,21 @@ extension HomeView: UITableViewDelegate {
         let local = searchResult[indexPath.row]
         searchTextField.text = local.title
         searchResultTableView.isHidden = true
-        delegate?.didSelectLocal(with: local)
+
+        let cameraUpdate = NMGLatLng(
+            lat: local.latitude,
+            lng: local.longitude
+        )
+        moveCamera(to: cameraUpdate)
+
+
+        searchResultMarker?.mapView = nil
+
+        let marker = NMFMarker()
+        marker.captionText = local.title
+        marker.position = cameraUpdate
+        marker.mapView = naverMapView.mapView
+        searchResultMarker = marker
     }
 }
 
@@ -292,13 +314,9 @@ extension HomeView {
     }
 
     func moveCamera(to update: NMGLatLng) {
-        let cameraUpdate = NMFCameraUpdate(scrollTo: update)
+        let cameraUpdate = NMFCameraUpdate(scrollTo: update, zoomTo: 15)
         cameraUpdate.animation = .easeIn
 
-        let locationOverlay = naverMapView.mapView.locationOverlay
-        locationOverlay.location = update
-        locationOverlay.hidden = false
-        
         naverMapView.mapView.moveCamera(cameraUpdate)
     }
 

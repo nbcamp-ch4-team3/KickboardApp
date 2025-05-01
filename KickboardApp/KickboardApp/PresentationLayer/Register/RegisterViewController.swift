@@ -33,10 +33,12 @@ final class RegisterViewController: UIViewController {
         viewModel.action?(.getAllBrand)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel.action?(.getCurrentLocation)
+    }
+
     private func setProtocol() {
         registerView.setKickboardSettingViewDelegate(self)
-        registerView.setCameraDelegate(self)
-
         viewModel.delegate = self
     }
 }
@@ -55,13 +57,6 @@ extension RegisterViewController: KickboardSettingViewDelegate {
     }
 }
 
-extension RegisterViewController: NMFMapViewCameraDelegate {
-    func mapViewCameraIdle(_ mapView: NMFMapView) {
-        let location = mapView.cameraPosition.target
-        registerView.configure(location: location)
-    }
-}
-
 extension RegisterViewController: RegisterViewModelDelegate {
     
     func didUpdateBrands(_ brands: [Brand]) {
@@ -74,5 +69,17 @@ extension RegisterViewController: RegisterViewModelDelegate {
 
     func didFailWithError(_ error: AppError) {
         self.showErrorAlert(error: error)
+    }
+
+    func didUpdateLocation(_ location: CLLocation) {
+        let location = NMGLatLng(
+            lat: location.coordinate.latitude,
+            lng: location.coordinate.longitude
+        )
+        registerView.moveCamera(to: location)
+    }
+
+    func didRequestLocationServiceAlert(_ alert: UIAlertController) {
+        self.present(alert, animated: true)
     }
 }

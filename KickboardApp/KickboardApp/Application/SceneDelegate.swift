@@ -16,14 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = ViewController()
         
-        let diContainer = DIContainer()
-        
         LogInManager.shared.loadLogInInfo()
         let isLoggedIn = LogInManager.shared.isLoggedIn
         if isLoggedIn {
             window?.rootViewController = TabBarController()
         } else {
-            window?.rootViewController = UINavigationController(rootViewController: diContainer.makeLogInViewController())
+            window?.rootViewController = UINavigationController(rootViewController: DIContainer.shared.makeLogInViewController())
         }
         
         window?.makeKeyAndVisible()
