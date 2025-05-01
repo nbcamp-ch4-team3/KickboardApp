@@ -41,6 +41,7 @@ final class HomeViewModel: ViewModelProtocol {
         case saveRideHistory(RideHistory)
         case updateKickboardLocation(UUID)
         case didSelectLocal(Local)
+        case setUserLocation
     }
 
     init(
@@ -69,7 +70,15 @@ final class HomeViewModel: ViewModelProtocol {
                 self.updateKickboardLocation(id: id)
             case .didSelectLocal(let local):
                 self.didSelectLocal(local: local)
+            case .setUserLocation:
+                self.setUserLocation()
             }
+        }
+    }
+
+    private func setUserLocation() {
+        if let location = locationManagerUseCase.getCurrentLocation() {
+            delegate?.didUpdateLocation(location)
         }
     }
 
