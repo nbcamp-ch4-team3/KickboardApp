@@ -37,4 +37,26 @@ final class KickboardRepository: KickboardRepositoryProtocol {
             with: kickboard
         )
     }
+
+    func getAllKickboard() throws -> [Kickboard] {
+        do {
+            let kickboardEntities = try kickboardCoreData.readAllData()
+            let kickboards: [Kickboard] = try kickboardEntities.compactMap {
+                guard let brand = $0.brand else { throw CoreDataError.notFound("Brand") }
+                let kickboard = Kickboard(
+                    id: $0.id ?? UUID(),
+                    latitude: $0.latitude,
+                    longitude: $0.longitude,
+                    battery: Int($0.battery),
+                    isAvailable: $0.isAvailable,
+                    brand: BrandMapper.toModel(from: brand)
+                )
+                return kickboard
+            }
+            return kickboards
+        } catch {
+            throw CoreDataError.readError(error)
+        }
+    }
 }
+

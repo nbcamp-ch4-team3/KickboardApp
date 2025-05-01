@@ -12,11 +12,20 @@ import FittedSheets
 
 final class HomeViewController: UIViewController {
     private let homeView = HomeView()
-    private let homeViewModel: HomeViewModelProtocol = HomeViewModel()
+    private let viewModel: HomeViewModelProtocol
     let locationManager = CLLocationManager()
 
     override func loadView() {
         view = homeView
+    }
+
+    init(viewModel: HomeViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -25,9 +34,17 @@ final class HomeViewController: UIViewController {
         locationManager.delegate = self
         homeView.delegate = self
 
-        homeViewModel.generateMockKickboards()
+//        homeViewModel.generateMockKickboards()
+        try? loadData()
     }
 
+    private func loadData() throws {
+        do {
+            try viewModel.fetchAllKickboards()
+        } catch {
+            throw CoreDataError.readError(error)
+        }
+    }
 
 }
 
@@ -104,7 +121,7 @@ private extension HomeViewController {
 extension HomeViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { print("마지막 위치 정보 없음"); return }
-        let filteredKickboards = homeViewModel.nearbyKickboards(from: currentLocation, within: 300)
+        let filteredKickboards = viewModel.nearbyKickboards(from: currentLocation, within: 300)
         DispatchQueue.main.async {
             self.homeView.updateKickboardMarkers(with: filteredKickboards)
         }

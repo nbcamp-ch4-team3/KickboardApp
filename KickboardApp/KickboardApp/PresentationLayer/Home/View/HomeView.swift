@@ -41,6 +41,8 @@ private extension HomeView {
     }
 
     func setStyle() {
+        naverMapView.showLocationButton = true
+
         searchTextField.do {
             $0.layer.cornerRadius = 10
             $0.layer.shadowColor = UIColor.black2?.cgColor
