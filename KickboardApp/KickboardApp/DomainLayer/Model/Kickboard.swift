@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Kickboard {
+struct Kickboard: Codable {
     let id: UUID
     var latitude: Double
     var longitude: Double
