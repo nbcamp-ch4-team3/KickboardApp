@@ -9,6 +9,8 @@ import CoreData
 import UIKit
 
 struct DIContainer {
+    static let shared = DIContainer()
+    
     private let brandRepository: BrandRepositoryProtocol
     private let kickboardRepository: KickboardRepositoryProtocol
     private let userRepository: UserRepositoryProtocol
@@ -58,5 +60,19 @@ struct DIContainer {
         let useCase = SignUpUseCase(userRepository: userRepository)
         let viewModel = SignUpViewModel(signUpUseCase: useCase)
         return SignUpViewController(status: .id, viewModel: viewModel)
+    }
+    
+    func makeMyPageViewController() -> MyPageViewController {
+        let useCase = MyPageUseCase(userRepository: userRepository)
+        let viewModel = MyPageViewModel(useCase: useCase)
+        return MyPageViewController(viewModel: viewModel)
+    }
+    
+    func makeDetailUseCase() -> DetailViewUseCase {
+        let useCase = DetailViewUseCase(
+            kickboardRepository: kickboardRepository,
+            userRepository: userRepository
+        )
+        return useCase
     }
 }
