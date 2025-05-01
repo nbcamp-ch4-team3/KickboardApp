@@ -7,10 +7,15 @@
 
 import UIKit
 
+protocol HomeBottomSheetVCDelegate: AnyObject {
+    func didTapConfirmButton()
+    func didBottomSheetDismissed()
+}
+
 final class HomeBottomSheetViewController: UIViewController {
     private let homeBottomSheetView = HomeBottomSheetView()
 
-    var kickboard: Kickboard?
+    weak var delegate: HomeBottomSheetVCDelegate?
 
     override func loadView() {
         view = homeBottomSheetView
@@ -19,22 +24,36 @@ final class HomeBottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        homeBottomSheetView
-            .configure(
-                with: kickboard ?? Kickboard(
-                    id: UUID(),
-                    latitude: 31.123412,
-                    longitude: 125.123412,
-                    battery: 75,
-                    isAvailable: true,
-                    brand: Brand(
-                        title: "SWING",
-                        imageName: "logo",
-                        distancePerBatteryUnit: 4,
-                        pricePerMinute: 180
-                    )
-                )
-            )
+        homeBottomSheetView.delegate = self
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        delegate?.didBottomSheetDismissed()
+    }
+
+    func configure(with kickboard: Kickboard) {
+        homeBottomSheetView.configure(with: kickboard)
+    }
+}
+
+extension HomeBottomSheetViewController: HomeBottomSheetViewDelegate {
+    func didTapRentButton() {
+        print("didTapRentButton")
+        let alert = UIAlertController(
+            title: "킥보드를 대여하시겠어요?",
+            message: "대여 후 이용 요금이 부과됩니다.\n계속 진행하시겠습니까?",
+            preferredStyle: .alert
+        )
+        let confirm = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.delegate?.didTapConfirmButton()
+            self.dismiss(animated: true)
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(confirm)
+        alert.addAction(cancel)
+
+        present(alert, animated: true)
+    }
 }
