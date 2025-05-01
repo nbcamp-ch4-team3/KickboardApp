@@ -66,6 +66,21 @@ final class SignUpViewController: UIViewController {
         }
     }
     
+    // 텍스트 필드 내 ID 검증 버튼
+    private func validateIdTextField() {
+        let input = signUpView.textField.text
+        guard let input else { return }
+        let result = viewModel.validateId(input)
+        
+        switch result {
+        case .valid:
+            showAlert(title: "정상", message: "사용할 수 있는 아이디입니다.")
+        case .invalid(let message):
+            showAlert(title: "오류", message: message)
+            signUpView.textField.text = ""
+        }
+    }
+    
     // 비밀번호 검증
     private func validatePassword() {
         let input = signUpView.textField.text
@@ -92,6 +107,21 @@ final class SignUpViewController: UIViewController {
         switch result {
         case .valid: // 이상 없으면 회원정보 저장 시도
             saveUserInfo()
+        case .invalid(let message):
+            showAlert(title: "오류", message: message)
+            signUpView.textField.text = ""
+        }
+    }
+    
+    // 텍스트 필드 내 닉네임 검증
+    private func validateNicknameTextField() {
+        let input = signUpView.textField.text
+        guard let input else { return }
+        let result = viewModel.validateNickname(input)
+        
+        switch result {
+        case .valid:
+            showAlert(title: "정상", message: "사용할 수 있는 닉네임입니다.")
         case .invalid(let message):
             showAlert(title: "오류", message: message)
             signUpView.textField.text = ""
@@ -152,8 +182,10 @@ extension SignUpViewController {
         case .password:
             signUpView.textField.button.addTarget(self, action: #selector(textFieldButtonTapped), for: .touchUpInside)
             signUpView.confirmTextField.button.addTarget(self, action: #selector(confirmTextFieldButtonTapped), for: .touchUpInside)
-        default:
-            break
+        case .id:
+            signUpView.textField.button.addTarget(self, action: #selector(textFieldIDButtonTapped), for: .touchUpInside)
+        case .nickname:
+            signUpView.textField.button.addTarget(self, action: #selector(textFieldNicknameButtonTapped), for: .touchUpInside)
         }
     }
     
@@ -163,5 +195,13 @@ extension SignUpViewController {
     
     @objc func confirmTextFieldButtonTapped() {
         signUpView.confirmTextField.toggleSecureTextEntry()
+    }
+    
+    @objc func textFieldIDButtonTapped() {
+        validateIdTextField()
+    }
+    
+    @objc func textFieldNicknameButtonTapped() {
+        validateNicknameTextField()
     }
 }

@@ -83,9 +83,9 @@ final class OnboardingTextField: UITextField {
         placeholder = type.placeholder
         isSecureTextEntry = type.isSecureTextEntry
         
-//        if type == .signUpId || type == .nickname {
-//            button.setTitle("인증", for: .normal)
-//        }
+        if type == .signUpId || type == .nickname {
+            button.setTitle("인증", for: .normal)
+        }
         
         if type == .logInPassword || type == .signUpPassword || type == .signUpConfirmPassword {
             let image = UIImage(systemName: "eye.slash")
