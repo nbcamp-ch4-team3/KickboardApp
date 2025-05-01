@@ -27,7 +27,6 @@ final class LocationManagerRepository: NSObject, LocationManagerRepositoryProtoc
             locationManager.delegate = self
             locationManager.requestWhenInUseAuthorization()
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            print(#function)
         }
 
         if !delegates.allObjects.contains(where: { $0 === delegate }) {
@@ -51,7 +50,6 @@ extension LocationManagerRepository: CLLocationManagerDelegate {
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        print(#function)
         DispatchQueue.global().async {
             self.askLocationPermission()
         }
@@ -77,7 +75,6 @@ private extension LocationManagerRepository {
     }
 
     func checkUserCurrentLocationAuthorization(_ status: CLAuthorizationStatus) {
-        print(#function)
         switch status {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()

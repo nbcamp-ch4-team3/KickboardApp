@@ -139,7 +139,6 @@ final class HomeViewModel: ViewModelProtocol {
 
 extension HomeViewModel: LocationManagerRepositoryDelegate {
     func didUpdateLocation(_ location: CLLocation) {
-        print(#function)
         delegate?.didUpdateLocation(location)
         nearbyKickboards(from: location, within: 1000)
     }
