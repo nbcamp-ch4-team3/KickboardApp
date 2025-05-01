@@ -8,13 +8,10 @@
 import UIKit
 
 final class SignUpViewController: UIViewController {
-    let status: SignUpStatus
-    
     private let signUpView = SignUpView()
     private let viewModel: SignUpViewModel
     
-    init(status: SignUpStatus, viewModel: SignUpViewModel) {
-        self.status = status
+    init(viewModel: SignUpViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -33,8 +30,18 @@ final class SignUpViewController: UIViewController {
         configure()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 사용자가 뒤로가기 버튼으로 이전 단계로 돌아가면, 뷰 모델의 회원가입 단계 상태값도 변경
+        if isMovingFromParent {
+            print("back button tapped")
+            viewModel.back()
+        }
+    }
+    
     @objc func buttonTapped() {
-        switch status {
+        switch viewModel.status {
         case .id:
             validateId()
         case .password:
@@ -52,9 +59,7 @@ final class SignUpViewController: UIViewController {
         
         switch result {
         case .valid: // 이상 없으면 다음 단계로 진행
-            let viewController = SignUpViewController(status: .password, viewModel: viewModel)
-            viewController.signUpView.configure(with: .password)
-            navigationController?.pushViewController(viewController, animated: true)
+            next()
         case .invalid(let message):
             showError(message: message)
             signUpView.textField.text = ""
@@ -70,9 +75,7 @@ final class SignUpViewController: UIViewController {
         
         switch result {
         case .valid: // 이상 없으면 다음 단계로 진행
-            let viewController = SignUpViewController(status: .nickname, viewModel: viewModel)
-            viewController.signUpView.configure(with: .nickname)
-            navigationController?.pushViewController(viewController, animated: true)
+            next()
         case .invalid(let message):
             showError(message: message)
             signUpView.textField.text = ""
@@ -93,6 +96,14 @@ final class SignUpViewController: UIViewController {
             showError(message: message)
             signUpView.textField.text = ""
         }
+    }
+    
+    // 회원가입 다음 단계로 이동
+    private func next() {
+        viewModel.next()
+        let viewController = SignUpViewController(viewModel: viewModel)
+        viewController.signUpView.configure(with: viewModel.status)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     private func saveUserInfo() {
