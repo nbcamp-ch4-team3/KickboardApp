@@ -17,6 +17,7 @@ protocol HomeViewDelegate: AnyObject {
 
 final class HomeView: UIView {
     weak var delegate: HomeViewDelegate?
+    private var searchResultMarker: NMFMarker?
     private var markers: [NMFMarker] = []
     private var areMarkersVisible = true
 
@@ -296,12 +297,13 @@ extension HomeView: UITableViewDelegate {
         moveCamera(to: cameraUpdate)
 
 
-        //TODO: 검색으로 선택한 위치의 마커는 captionTitle이 존재, 지도 상에 하나만 존재해야 되므로 제거함 -> 지도 상의 마커에 대한 업데이트 필요
-        markers.removeAll(where: {$0.captionText != "" })
+        searchResultMarker?.mapView = nil
+
         let marker = NMFMarker()
         marker.captionText = local.title
         marker.position = cameraUpdate
         marker.mapView = naverMapView.mapView
+        searchResultMarker = marker
     }
 }
 
