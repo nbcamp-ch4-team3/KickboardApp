@@ -41,6 +41,13 @@ enum OnboardingTextFieldType {
 final class OnboardingTextField: UITextField {
     var type: OnboardingTextFieldType
     
+    let button: UIButton = {
+        let button = UIButton(type: .system)
+        button.sizeToFit()
+        button.tintColor = .black2
+        return button
+    }()
+    
     init(type: OnboardingTextFieldType) {
         self.type = type
         super.init(frame: .zero)
@@ -52,10 +59,20 @@ final class OnboardingTextField: UITextField {
         leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0)) // 왼쪽 공백 추가
         leftViewMode = .always
         font = .font(.pretendardRegular, ofSize: 18)
-        placeholder = type.placeholder
-        isSecureTextEntry = type.isSecureTextEntry
         autocorrectionType = .no
         autocapitalizationType = .none
+        
+        let containerWidth = button.frame.width + 20
+        let containerHeight = max(button.frame.height, 40)
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: containerWidth, height: containerHeight))
+        
+        button.frame.origin = CGPoint(x: 0, y: (containerHeight - button.frame.height) / 2)
+        container.addSubview(button)
+        
+        rightView = container
+        rightViewMode = .always
+        
+        configure(type: type)
     }
     
     required init?(coder: NSCoder) {
@@ -65,5 +82,18 @@ final class OnboardingTextField: UITextField {
     func configure(type: OnboardingTextFieldType) {
         placeholder = type.placeholder
         isSecureTextEntry = type.isSecureTextEntry
+        
+//        if type == .signUpId || type == .nickname {
+//            button.setTitle("인증", for: .normal)
+//        }
+        
+        if type == .signUpPassword || type == .signUpConfirmPassword {
+            let image = UIImage(systemName: "eye")
+            button.setImage(image, for: .normal)
+        }
+    }
+    
+    func toggleSecureTextEntry() {
+        isSecureTextEntry.toggle()
     }
 }

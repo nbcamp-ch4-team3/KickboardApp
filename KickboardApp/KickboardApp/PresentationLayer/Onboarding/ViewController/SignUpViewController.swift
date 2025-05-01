@@ -162,5 +162,21 @@ extension SignUpViewController {
     
     func setAction() {
         signUpView.button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+        switch viewModel.status {
+        case .password:
+            signUpView.textField.button.addTarget(self, action: #selector(textFieldButtonTapped), for: .touchUpInside)
+            signUpView.confirmTextField.button.addTarget(self, action: #selector(confirmTextFieldButtonTapped), for: .touchUpInside)
+        default:
+            break
+        }
+    }
+    
+    @objc func textFieldButtonTapped() {
+        signUpView.textField.toggleSecureTextEntry()
+    }
+    
+    @objc func confirmTextFieldButtonTapped() {
+        signUpView.confirmTextField.toggleSecureTextEntry()
     }
 }
