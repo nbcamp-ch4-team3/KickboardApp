@@ -59,24 +59,10 @@ final class LogInViewController: UIViewController {
             let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
             sceneDelegate?.window?.rootViewController = TabBarController()
         case .invalid(let message):
-            showError(message: message)
+            showAlert(title: "오류", message: message)
             logInView.idTextfield.text = ""
             logInView.passwordTextField.text = ""
         }
-    }
-    
-    private func showError(message: String) {
-        let alertTitle = NSLocalizedString("오류", comment: "Error alert title")
-        let alert = UIAlertController(
-            title: alertTitle, message: message, preferredStyle: .alert)
-        let actionTitle = NSLocalizedString("확인", comment: "Alert OK button title")
-        alert.addAction(
-            UIAlertAction(
-                title: actionTitle, style: .default,
-                handler: { [weak self] _ in
-                    self?.dismiss(animated: true)
-                }))
-        present(alert, animated: true, completion: nil)
     }
 }
 

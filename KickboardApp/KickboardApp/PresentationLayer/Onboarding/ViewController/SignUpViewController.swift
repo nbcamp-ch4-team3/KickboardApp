@@ -61,7 +61,7 @@ final class SignUpViewController: UIViewController {
         case .valid: // 이상 없으면 다음 단계로 진행
             next()
         case .invalid(let message):
-            showError(message: message)
+            showAlert(title: "오류", message: message)
             signUpView.textField.text = ""
         }
     }
@@ -77,7 +77,7 @@ final class SignUpViewController: UIViewController {
         case .valid: // 이상 없으면 다음 단계로 진행
             next()
         case .invalid(let message):
-            showError(message: message)
+            showAlert(title: "오류", message: message)
             signUpView.textField.text = ""
             signUpView.confirmTextField.text = ""
         }
@@ -93,7 +93,7 @@ final class SignUpViewController: UIViewController {
         case .valid: // 이상 없으면 회원정보 저장 시도
             saveUserInfo()
         case .invalid(let message):
-            showError(message: message)
+            showAlert(title: "오류", message: message)
             signUpView.textField.text = ""
         }
     }
@@ -113,24 +113,9 @@ final class SignUpViewController: UIViewController {
         case .valid: // 회원정보 저장이 성공하면 로그인 화면으로 이동
             signUpCompleted(message: "다시 로그인 해주세요.")
         case .invalid(let message):
-            showError(message: message)
+            showAlert(title: "오류", message: message)
             self.navigationController?.popToRootViewController(animated: true)
         }
-    }
-    
-    // 오류 메시지
-    private func showError(message: String) {
-        let alertTitle = NSLocalizedString("오류", comment: "Error alert title")
-        let alert = UIAlertController(
-            title: alertTitle, message: message, preferredStyle: .alert)
-        let actionTitle = NSLocalizedString("확인", comment: "Alert OK button title")
-        alert.addAction(
-            UIAlertAction(
-                title: actionTitle, style: .default,
-                handler: { [weak self] _ in
-                    self?.dismiss(animated: true)
-                }))
-        present(alert, animated: true, completion: nil)
     }
     
     // 회원가입 성공 알림 및 로그인 화면 이동
