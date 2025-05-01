@@ -58,5 +58,13 @@ final class KickboardRepository: KickboardRepositoryProtocol {
             throw CoreDataError.readError(error)
         }
     }
+
+    func updateLocation(id: UUID, latitude: Double, longitude: Double) throws {
+        do {
+            try kickboardCoreData.updateLocation(id: id, latitude: latitude, longitude: longitude)
+        } catch {
+            throw CoreDataError.updateError(error)
+        }
+    }
 }
 

@@ -39,6 +39,7 @@ final class HomeViewModel: ViewModelProtocol {
         case fetchSearchResult(String)
         case fetchKickboards
         case saveRideHistory(RideHistory)
+        case updateKickboardLocation(UUID)
         case didSelectLocal(Local)
     }
 
@@ -64,6 +65,8 @@ final class HomeViewModel: ViewModelProtocol {
                 }
             case .saveRideHistory(let history):
                 self.saveRideHistory(with: history)
+            case .updateKickboardLocation(let id):
+                self.updateKickboardLocation(id: id)
             case .didSelectLocal(let local):
                 self.didSelectLocal(local: local)
             }
@@ -110,6 +113,15 @@ final class HomeViewModel: ViewModelProtocol {
         do {
             _ = try homeUseCase.saveRideHistory(with: rideHistory)
             delegate?.didSaveRideHistory()
+        } catch {
+            delegate?.didFailWithError(AppError(error))
+        }
+    }
+
+    private func updateKickboardLocation(id: UUID) {
+        do {
+            guard let location = locationManagerUseCase.getCurrentLocation()?.coordinate else { return }
+            try homeUseCase.updateKickboardLocation(id: id, latitude: location.latitude, longitude: location.longitude)
         } catch {
             delegate?.didFailWithError(AppError(error))
         }

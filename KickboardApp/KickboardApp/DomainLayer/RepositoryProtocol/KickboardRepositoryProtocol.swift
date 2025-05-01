@@ -10,4 +10,5 @@ import Foundation
 protocol KickboardRepositoryProtocol {
     func saveKickboard(with kickboard: Kickboard) throws -> Void
     func getAllKickboard() throws -> [Kickboard]
+    func updateLocation(id: UUID, latitude: Double, longitude: Double) throws
 }
