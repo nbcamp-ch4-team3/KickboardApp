@@ -39,6 +39,7 @@ final class HomeViewModel: ViewModelProtocol {
         case fetchSearchResult(String)
         case fetchKickboards
         case saveRideHistory(RideHistory)
+        case didSelectLocal(Local)
     }
 
     init(
@@ -63,6 +64,8 @@ final class HomeViewModel: ViewModelProtocol {
                 }
             case .saveRideHistory(let history):
                 self.saveRideHistory(with: history)
+            case .didSelectLocal(let local):
+                self.didSelectLocal(local: local)
             }
         }
     }
@@ -70,17 +73,26 @@ final class HomeViewModel: ViewModelProtocol {
     private func fetchKickboards() throws {
         do {
             self.kickboards = try homeUseCase.getAllKickboard()
-            delegate?.didUpdateKickboards(kickboards: kickboards)
+            if let location = locationManagerUseCase.getCurrentLocation() {
+                nearbyKickboards(from: location, within: 1000)
+            }
         } catch {
             throw CoreDataError.readError(error)
         }
     }
 
-    func nearbyKickboards(from location: CLLocation, within meters: Double) -> [Kickboard] {
-        return kickboards.filter { kickboard in
+    private func didSelectLocal(local: Local) {
+        let location = CLLocation(latitude: local.latitude, longitude: local.longitude)
+        nearbyKickboards(from: location, within: 1000)
+    }
+
+    private func nearbyKickboards(from location: CLLocation, within meters: Double) {
+        let nearbyKickboards = kickboards.filter { kickboard in
             let kickboardLocation = CLLocation(latitude: kickboard.latitude, longitude: kickboard.longitude)
             return location.distance(from: kickboardLocation) <= meters
         }
+
+        delegate?.didUpdateKickboards(kickboards: nearbyKickboards)
     }
 
     private func fetchSearchResult(query: String) {
@@ -107,67 +119,10 @@ final class HomeViewModel: ViewModelProtocol {
 extension HomeViewModel: LocationManagerRepositoryDelegate {
     func didUpdateLocation(_ location: CLLocation) {
         delegate?.didUpdateLocation(location)
+        nearbyKickboards(from: location, within: 1000)
     }
 
     func showRequestLocationServiceAlert(_ alertController: UIAlertController) {
         delegate?.didRequestLocationServiceAlert(alertController)
     }
 }
-
-//
-//func generateMockKickboards() {
-//    mockKickboards = [
-//        Kickboard(
-//            id: UUID(),
-//            latitude: 34.499621,
-//            longitude: 126.531188,
-//            battery: 34,
-//            isAvailable: true,
-//            brand: Brand(
-//                title: "씽씽",
-//                imageName: "ssingSsing",
-//                distancePerBatteryUnit: 2,
-//                pricePerMinute: 190
-//            )
-//        ),
-//        Kickboard(
-//            id: UUID(),
-//            latitude: 33.499221,
-//            longitude: 126.531688,
-//            battery: 86,
-//            isAvailable: true,
-//            brand: Brand(
-//                title: "빔",
-//                imageName: "beam",
-//                distancePerBatteryUnit: 3,
-//                pricePerMinute: 170
-//            )
-//        ),
-//        Kickboard(
-//            id: UUID(),
-//            latitude: 33.498921,
-//            longitude: 126.530188,
-//            battery: 68,
-//            isAvailable: true,
-//            brand: Brand(
-//                title: "킥",
-//                imageName: "kick",
-//                distancePerBatteryUnit: 2.5,
-//                pricePerMinute: 180
-//            )
-//        ),
-//        Kickboard(
-//            id: UUID(),
-//            latitude: 33.500321,
-//            longitude: 126.532288,
-//            battery: 44,
-//            isAvailable: true,
-//            brand: Brand(
-//                title: "씽씽",
-//                imageName: "ssingSsing",
-//                distancePerBatteryUnit: 2,
-//                pricePerMinute: 190
-//            )
-//        )
-//    ]
-//}

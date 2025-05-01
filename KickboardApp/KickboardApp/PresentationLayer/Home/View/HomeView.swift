@@ -13,6 +13,7 @@ protocol HomeViewDelegate: AnyObject {
     func didTapMarkerVisibleButton()
     func didTapReturnButton()
     func didTapSearchButton(with textField: UITextField)
+    func didSelectLocal(with local: Local)
 }
 
 final class HomeView: UIView {
@@ -295,7 +296,7 @@ extension HomeView: UITableViewDelegate {
             lng: local.longitude
         )
         moveCamera(to: cameraUpdate)
-
+        delegate?.didSelectLocal(with: local)
 
         searchResultMarker?.mapView = nil
 

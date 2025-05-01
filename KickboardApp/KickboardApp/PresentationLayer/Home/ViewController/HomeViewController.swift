@@ -103,13 +103,7 @@ extension HomeViewController: HomeViewDelegate {
     }
 
     func didSelectLocal(with local: Local) {
-        let cameraUpdate = NMGLatLng(
-            lat: local.latitude,
-            lng: local.longitude
-        )
-        DispatchQueue.main.async {
-            self.homeView.moveCamera(to: cameraUpdate)
-        }
+        viewModel.action?(.didSelectLocal(local))
     }
 
     func didTapMarker(with kickboard: Kickboard) {
