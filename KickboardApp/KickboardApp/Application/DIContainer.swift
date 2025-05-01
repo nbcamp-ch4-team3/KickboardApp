@@ -59,7 +59,7 @@ struct DIContainer {
     func makeSignUpViewController() -> SignUpViewController {
         let useCase = SignUpUseCase(userRepository: userRepository)
         let viewModel = SignUpViewModel(signUpUseCase: useCase)
-        return SignUpViewController(status: .id, viewModel: viewModel)
+        return SignUpViewController(viewModel: viewModel)
     }
     
     func makeMyPageViewController() -> MyPageViewController {

@@ -8,22 +8,37 @@
 import Foundation
 
 final class SignUpViewModel {
-    var id: String?
-    var password: String?
-    var nickname: String?
+    // 회원 가입 단계 추적
+    var status: SignUpStatus = .id
     
-//    var status: SignUpStatus = .id
-//    
-//    func next() {
-//        switch status {
-//        case .id:
-//            status = .password
-//        case .password:
-//            status = .nickname
-//        case .nickname:
-//            break
-//        }
-//    }
+    // 다음 단계로 이동
+    func next() {
+        switch status {
+        case .id:
+            status = .password
+        case .password:
+            status = .nickname
+        case .nickname:
+            break
+        }
+    }
+    
+    // 이전 단계로 이동
+    func back() {
+        switch status {
+        case .id:
+            break
+        case .password:
+            status = .id
+        case .nickname:
+            status = .password
+        }
+    }
+    
+    // 회원가입 정보 임시 저장
+    private var id: String?
+    private var password: String?
+    private var nickname: String?
     
     private let signUpUseCase: SignUpUseCaseProtocol
     

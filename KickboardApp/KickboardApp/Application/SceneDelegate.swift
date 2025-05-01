@@ -18,8 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let diContainer = DIContainer()
         
-        var isLogin = true
-        if isLogin {
+        LogInManager.shared.loadLogInInfo()
+        let isLoggedIn = LogInManager.shared.isLoggedIn
+        if isLoggedIn {
             window?.rootViewController = TabBarController()
         } else {
             window?.rootViewController = UINavigationController(rootViewController: diContainer.makeLogInViewController())

@@ -28,6 +28,7 @@ final class LogInViewModel {
             return .invalid(message: "비밀번호가 유효하지 않습니다.")
         }
         
+        LogInManager.shared.saveLogInInfo(id) // 자동 로그인 아이디 저장
         return .valid
     }
     
