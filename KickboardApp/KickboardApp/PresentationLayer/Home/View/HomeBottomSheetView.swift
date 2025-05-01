@@ -36,7 +36,7 @@ final class HomeBottomSheetView: UIView {
     func configure(with kickboard: Kickboard) {
         self.kbBrandLabel.text = kickboard.brand.title
         self.kbModelLabel.text = String(kickboard.id.uuidString.prefix(8))
-        self.kbCommentLabel.attributedText = makeComment(distance: kickboard.brand.distancePerBatteryUnit)
+        self.kbCommentLabel.attributedText = makeComment(distance: kickboard.brand.distancePerBatteryUnit * Double(kickboard.battery))
         self.kbFeePerMinuteLabel.text = "분당 \(kickboard.brand.pricePerMinute)원"
         self.kbImageView.image = UIImage(named: "\(kickboard.brand.imageName)")
         self.kbRemainedBatteryView.configure(with: kickboard.battery)
