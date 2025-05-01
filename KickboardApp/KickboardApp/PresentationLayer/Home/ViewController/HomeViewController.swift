@@ -84,6 +84,7 @@ private extension HomeViewController {
 
             viewModel.action?(.saveRideHistory(rideHistory))
             viewModel.action?(.updateKickboardLocation(kickboard.id))
+            viewModel.action?(.fetchKickboards)
         }
 
         // 기존 저장되어있던 대여 정보 제거
