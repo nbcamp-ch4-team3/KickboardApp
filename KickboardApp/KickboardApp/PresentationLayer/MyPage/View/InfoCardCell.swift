@@ -47,12 +47,6 @@ final class InfoCardCell: UITableViewCell {
         
         setShadow()
     }
-    
-    func setType(_ type: PageType) {
-        self.pageType = type
-        firstInfoTitleLabel.text = type.firstInfoTitle
-        secondInfoTitleLabel.text = type.secondInfoTitle
-    }
 }
 
 private extension InfoCardCell {
@@ -70,14 +64,13 @@ private extension InfoCardCell {
         }
         
         typeTitleLabel.do {
-            $0.text = "타입 : "
+            $0.text = "브렌드 : "
             $0.font = .font(.pretendardRegular, ofSize: 15)
             $0.textColor = .black
             $0.numberOfLines = 1
         }
         
         typeLabel.do {
-            $0.text = "전동 킥보드"
             $0.font = .font(.pretendardRegular, ofSize: 15)
             $0.textColor = .black
             $0.numberOfLines = 1
@@ -96,7 +89,6 @@ private extension InfoCardCell {
         }
         
         dateLabel.do {
-            $0.text = "25.03.02"
             $0.font = .font(.pretendardRegular, ofSize: 15)
             $0.textColor = .black
             $0.numberOfLines = 1
@@ -115,7 +107,6 @@ private extension InfoCardCell {
         }
         
         firstInfoLabel.do {
-            $0.text = "Test Text"
             $0.font = .font(.pretendardRegular, ofSize: 15)
             $0.textColor = .black
             $0.numberOfLines = 1
@@ -134,7 +125,6 @@ private extension InfoCardCell {
         }
         
         secondInfoLabel.do {
-            $0.text = "Test Text"
             $0.font = .font(.pretendardMedium, ofSize: 15)
             $0.textColor = .black
             $0.numberOfLines = 1
@@ -156,7 +146,6 @@ private extension InfoCardCell {
         }
         
         modelLabel.do {
-            $0.text = "SA-002T"
             $0.font = .font(.pretendardBold, ofSize: 13)
             $0.textColor = .primary
             $0.numberOfLines = 1
@@ -256,3 +245,28 @@ private extension InfoCardCell {
         ).cgPath
     }
 }
+
+extension InfoCardCell {
+    func setType(_ type: PageType) {
+        self.pageType = type
+        firstInfoTitleLabel.text = type.firstInfoTitle
+        secondInfoTitleLabel.text = type.secondInfoTitle
+    }
+    
+    func setHistory(_ history: History) {
+        typeLabel.text = history.type
+        dateLabel.text = history.date
+        firstInfoLabel.text = history.time
+        secondInfoLabel.text = history.amount
+        modelLabel.text = history.model
+    }
+    
+    func setUseInfo(_ useInfo: UseInfo) {
+        typeLabel.text = useInfo.type
+        dateLabel.text = useInfo.date
+        firstInfoLabel.text = useInfo.address
+        modelLabel.text = useInfo.model
+        secondInfoTitleLabel.isHidden = true
+        secondInfoLabel.isHidden = true
+    }
+ }
