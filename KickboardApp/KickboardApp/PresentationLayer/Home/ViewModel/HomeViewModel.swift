@@ -16,18 +16,34 @@ protocol HomeViewModelProtocol: AnyObject {
     func nearbyKickboards(from location: CLLocation, within meters: Double) -> [Kickboard]
 }
 
-final class HomeViewModel: HomeViewModelProtocol {
+protocol HomeViewModelDelegate: AnyObject {
+    func didUpdateLocals(locals: [Local])
+    func didFailWithError(_ error: AppError)
+}
 
+final class HomeViewModel: HomeViewModelProtocol, ViewModelProtocol {
     private let useCase: HomeUseCaseProtocol
-
-    init(
-        useCase: HomeUseCaseProtocol
-    ) {
-        self.useCase = useCase
-    }
+    weak var delegate: HomeViewModelDelegate?
 
     var mockKickboards: [Kickboard] = []
     var kickboards: [Kickboard] = []
+
+    var action: ((Action) -> Void)?
+
+    enum Action {
+        case fetchSearchResult(String)
+    }
+
+    init(useCase: HomeUseCaseProtocol) {
+        self.useCase = useCase
+
+        action = {[weak self] action in
+            switch action {
+            case .fetchSearchResult(let query):
+                self?.fetchSearchResult(query: query)
+            }
+        }
+    }
 
     func generateMockKickboards() {
         mockKickboards = [
@@ -98,6 +114,17 @@ final class HomeViewModel: HomeViewModelProtocol {
         return kickboards.filter { kickboard in
             let kickboardLocation = CLLocation(latitude: kickboard.latitude, longitude: kickboard.longitude)
             return location.distance(from: kickboardLocation) <= meters
+        }
+    }
+
+    private func fetchSearchResult(query: String) {
+        Task {
+            do {
+                let locals = try await useCase.fetchSearchResult(query: query)
+                delegate?.didUpdateLocals(locals: locals)
+            } catch {
+                delegate?.didFailWithError(AppError(error))
+            }
         }
     }
 }

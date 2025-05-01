@@ -64,7 +64,7 @@ extension RegisterViewController: NMFMapViewCameraDelegate {
 
 extension RegisterViewController: RegisterViewModelDelegate {
     
-    func didGetAllBrand(_ brands: [Brand]) {
+    func didUpdateBrands(_ brands: [Brand]) {
         registerView.setDataSource(brands: brands)
     }
 

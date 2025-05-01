@@ -13,7 +13,7 @@ protocol ViewModelProtocol {
 }
 
 protocol RegisterViewModelDelegate: AnyObject {
-    func didGetAllBrand(_ brands: [Brand])
+    func didUpdateBrands(_ brands: [Brand])
     func didSaveKickboard()
     func didFailWithError(_ error: AppError)
 }
@@ -47,7 +47,7 @@ final class RegisterViewModel: ViewModelProtocol {
     private func getAllBrand() {
         do {
             let result = try useCase.getAllBrand()
-            delegate?.didGetAllBrand(result)
+            delegate?.didUpdateBrands(result)
         } catch {
             delegate?.didFailWithError(AppError(error))
         }

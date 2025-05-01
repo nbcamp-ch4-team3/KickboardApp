@@ -9,18 +9,26 @@ import Foundation
 
 protocol HomeUseCaseProtocol {
     func getAllKickboard() throws -> [Kickboard]
+    func fetchSearchResult(query: String) async throws -> [Local]
 }
 
 final class HomeUseCase: HomeUseCaseProtocol {
     private let kickboardRepository: KickboardRepositoryProtocol
+    private let localRepository: LocalRepositoryProtocol
 
     init(
-        kickboardRepository: KickboardRepositoryProtocol
+        kickboardRepository: KickboardRepositoryProtocol,
+        localRepository: LocalRepositoryProtocol
     ) {
         self.kickboardRepository = kickboardRepository
+        self.localRepository = localRepository
     }
 
     func getAllKickboard() throws -> [Kickboard] {
         try kickboardRepository.getAllKickboard()
+    }
+
+    func fetchSearchResult(query: String) async throws -> [Local] {
+        try await localRepository.fetchSearchResult(query: query)
     }
 }

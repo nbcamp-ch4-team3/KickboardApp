@@ -10,13 +10,23 @@ import NMapsMap
 
 protocol HomeViewDelegate: AnyObject {
     func didTapMarker(with kickboard: Kickboard)
+    func didTapSearchButton(with textField: UITextField)
+    func didSelectLocal(with local: Local)
 }
 
 final class HomeView: UIView {
     weak var delegate: HomeViewDelegate?
     private var markers: [NMFMarker] = []
+    private var searchResult = [Local]() {
+        didSet {
+            searchResultTableView.isHidden = false
+            emptyResultLabel.isHidden = !searchResult.isEmpty
+        }
+    }
 
     private let searchTextField = UITextField()
+    private let searchResultTableView = UITableView()
+    private let emptyResultLabel = UILabel()
     private let naverMapView = NMFNaverMapView()
 
     override init(frame: CGRect) {
@@ -30,6 +40,10 @@ final class HomeView: UIView {
         fatalError("init(coder:) has not been implemented.")
     }
 
+    func setSearchResult(locals: [Local]) {
+        self.searchResult = locals
+        searchResultTableView.reloadData()
+    }
 }
 
 private extension HomeView {
@@ -38,6 +52,7 @@ private extension HomeView {
         setHierarchy()
         setConstraints()
         setAction()
+        setProtocol()
     }
 
     func setStyle() {
@@ -65,15 +80,36 @@ private extension HomeView {
             config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 12)
             let rightButton = UIButton(configuration: config)
             rightButton.frame = CGRect(x: 0, y: 0, width: 44, height: 48)
-
+            rightButton.addTarget(
+                self,
+                action: #selector(touchUpInsideSearchButton),
+                for: .touchUpInside
+            )
             $0.rightViewMode = .always
             $0.rightView = rightButton
+        }
 
+        searchResultTableView.do {
+            $0.register(
+                SearchResultTableViewCell.self,
+                forCellReuseIdentifier: SearchResultTableViewCell.id
+            )
+            $0.layer.cornerRadius = 10
+            $0.isHidden = true
+        }
+
+        emptyResultLabel.do {
+            $0.text = "검색 결과가 없습니다."
+            $0.textColor = .gray2
+            $0.font = .font(.pretendardBold, ofSize: 16)
+            $0.textAlignment = .center
+            $0.isHidden = true
         }
     }
 
     func setHierarchy() {
-        addSubViews(naverMapView, searchTextField)
+        addSubViews(naverMapView, searchTextField, searchResultTableView)
+        searchResultTableView.backgroundView = emptyResultLabel
     }
 
     func setConstraints() {
@@ -86,14 +122,61 @@ private extension HomeView {
             $0.top.equalTo(safeAreaLayoutGuide).offset(24)
             $0.height.equalTo(48)
         }
+
+        searchResultTableView.snp.makeConstraints { make in
+            make.top.equalTo(searchTextField.snp.bottom)
+            make.directionalHorizontalEdges.equalTo(searchTextField)
+            make.height.equalTo(200)
+        }
+
+        emptyResultLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
 
     func setAction() {
 
     }
+
+    func setProtocol() {
+        searchResultTableView.dataSource = self
+        searchResultTableView.delegate = self
+        naverMapView.mapView.touchDelegate = self
+    }
+}
+
+extension HomeView: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResult.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: SearchResultTableViewCell.id
+        ) as? SearchResultTableViewCell else {
+            return UITableViewCell()
+        }
+
+        cell.configure(with: searchResult[indexPath.row])
+        return cell
+    }
+}
+
+extension HomeView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let local = searchResult[indexPath.row]
+        searchTextField.text = local.title
+        searchResultTableView.isHidden = true
+        delegate?.didSelectLocal(with: local)
+    }
 }
 
 extension HomeView {
+    @objc
+    private func touchUpInsideSearchButton() {
+        delegate?.didTapSearchButton(with: searchTextField)
+    }
+
     func moveCamera(to update: NMGLatLng) {
         let cameraUpdate = NMFCameraUpdate(scrollTo: update)
         cameraUpdate.animation = .easeIn
@@ -123,5 +206,11 @@ extension HomeView {
             }
             markers.append(marker)
         }
+    }
+}
+
+extension HomeView: NMFMapViewTouchDelegate {
+    func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
+        searchResultTableView.isHidden = true
     }
 }
