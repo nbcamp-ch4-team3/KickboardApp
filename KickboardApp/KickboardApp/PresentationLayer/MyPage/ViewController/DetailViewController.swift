@@ -22,7 +22,7 @@ final class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         view = rootView
-        
+        viewModel.delegate = self
         rootView.tableViewConfigure(delegate: self, dataSource: self)
         setNavigationBar()
         viewModel.action?(.getInfo)
@@ -78,5 +78,29 @@ extension DetailViewController: UITableViewDataSource {
 extension DetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 147
+    }
+}
+
+extension DetailViewController: DetailViewModelDelegate {
+    func getInfo() {
+        switch viewModel.pageType {
+        case .history:
+            if viewModel.historys.isEmpty {
+                rootView.updateBackgroundView(true, .history)
+            } else {
+                rootView.updateBackgroundView(false, .history)
+            }
+        case .kickboard:
+            if viewModel.useInfos.isEmpty {
+                rootView.updateBackgroundView(true, .kickboard)
+            } else {
+                rootView.updateBackgroundView(false, .kickboard)
+            }
+        }
+        rootView.tableViewReloadData()
+    }
+
+    func didFailWithError(_ error: AppError) {
+        self.showErrorAlert(error: error)
     }
 }
