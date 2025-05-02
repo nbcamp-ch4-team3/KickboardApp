@@ -29,7 +29,6 @@ final class InfoCardCell: UITableViewCell {
     private let iconImageView = UIImageView()
     private let modelLabel = UILabel()
     private let modelStackView = UIStackView()
-    private let deleteButton: UIButton = .init(type: .system)
     private let infoStackView = UIStackView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -161,16 +160,11 @@ private extension InfoCardCell {
             $0.directionalLayoutMargins = .init(top: 3, leading: 8, bottom: 2, trailing: 8)
             $0.isLayoutMarginsRelativeArrangement = true
         }
-        
-        deleteButton.do {
-            $0.setImage(.icDelete, for: .normal)
-            $0.tintColor = .gray2
-        }
     }
     
     func setHierarchy() {
         contentView.addSubview(containerView)
-        containerView.addSubViews(infoStackView, modelStackView, deleteButton)
+        containerView.addSubViews(infoStackView, modelStackView)
         infoStackView.addArrangedSubviews(
             typeStackView,
             dateStackView,
@@ -199,14 +193,7 @@ private extension InfoCardCell {
         iconImageView.snp.makeConstraints {
             $0.size.equalTo(20)
         }
-        
-        deleteButton.snp.makeConstraints {
-            $0.bottom.equalToSuperview().inset(14)
-            $0.trailing.equalToSuperview().inset(14)
-            $0.width.equalTo(21)
-            $0.height.equalTo(23)
-        }
-        
+
         typeStackView.snp.makeConstraints {
             $0.height.equalTo(24)
         }

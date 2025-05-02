@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: windowScene)
 
-        LogInManager.shared.deleteLogInInfo()
+//        LogInManager.shared.deleteLogInInfo()
         LogInManager.shared.loadLogInInfo()
         let isLoggedIn = LogInManager.shared.isLoggedIn
         if isLoggedIn {
@@ -54,7 +54,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
-
 }
 
+extension SceneDelegate {
+    func updateRootViewController() {
+        LogInManager.shared.loadLogInInfo()
+        let isLoggedIn = LogInManager.shared.isLoggedIn
+        if isLoggedIn {
+            window?.rootViewController = TabBarController()
+        } else {
+            window?.rootViewController = UINavigationController(rootViewController: DIContainer.shared.makeLogInViewController())
+        }
+        window?.makeKeyAndVisible()
+    }
+}

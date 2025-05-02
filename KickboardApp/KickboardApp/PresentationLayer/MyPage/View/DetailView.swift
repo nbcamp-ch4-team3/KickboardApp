@@ -64,17 +64,10 @@ extension DetailView {
         tableView.reloadData()
     }
     
-    func updateBackgroundView(_ isEmpty: Bool) {
+    func updateBackgroundView(_ isEmpty: Bool, _ type: PageType) {
         if isEmpty {
-            let label = UILabel()
-            
-            label.do {
-                $0.text = "검색 결과 없음"
-                $0.textColor = .systemGray
-                $0.font = .systemFont(ofSize: 16, weight: .medium)
-                $0.textAlignment = .center
-            }
-            tableView.backgroundView = label
+            let backgroundView = EmptyView(pageType: type)
+            tableView.backgroundView = backgroundView
         } else {
             tableView.backgroundView = nil
         }

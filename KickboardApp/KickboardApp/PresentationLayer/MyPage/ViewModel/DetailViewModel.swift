@@ -9,14 +9,12 @@ import Foundation
 
 protocol DetailViewModelDelegate: AnyObject {
     func getInfo()
-    func deleteCell()
     func didFailWithError(_ error: AppError)
 }
 
 final class DetailViewModel: ViewModelProtocol {
     enum Action {
         case getInfo
-        case deleteCell(index: Int)
     }
     
     private(set) var historys: [History] = []
@@ -37,8 +35,6 @@ final class DetailViewModel: ViewModelProtocol {
             switch action {
             case .getInfo:
                 self?.getInfo()
-            case let .deleteCell(index):
-                self?.deleteCell(index: index)
             }
         }
     }
@@ -54,21 +50,6 @@ final class DetailViewModel: ViewModelProtocol {
                 let result = try useCase.getUseInfo()
                 useInfos = result
                 delegate?.getInfo()
-            }
-        } catch {
-            delegate?.didFailWithError(AppError(error))
-        }
-    }
-    
-    private func deleteCell(index: Int) {
-        do {
-            switch pageType {
-            case .history:
-                try useCase.deleteHistory(id: 1)
-                historys.remove(at: index)
-            case .kickboard:
-                try useCase.deleteUseInfo(id: 1)
-                useInfos.remove(at: index)
             }
         } catch {
             delegate?.didFailWithError(AppError(error))
