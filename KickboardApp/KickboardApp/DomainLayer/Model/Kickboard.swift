@@ -13,6 +13,7 @@ struct Kickboard: Codable {
     var longitude: Double
     var battery: Int
     var isAvailable: Bool
+    let date: Date
     let brand: Brand
 
     //TODO: 위, 경도 변경 / 배터리 닳기 / 사용여부 변경
@@ -24,6 +25,7 @@ struct Kickboard: Codable {
         longitude: Double,
         battery: Int,
         isAvailable: Bool,
+        date: Date,
         brand: Brand
     ) {
         self.id = id
@@ -32,5 +34,6 @@ struct Kickboard: Codable {
         self.battery = battery
         self.isAvailable = isAvailable
         self.brand = brand
+        self.date = date
     }
 }

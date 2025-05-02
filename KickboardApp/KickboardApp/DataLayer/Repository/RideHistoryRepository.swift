@@ -54,6 +54,7 @@ final class RideHistoryRepository: RideHistoryRepositoryProtocol {
             }
 
             guard let kickboardId = kickboardEntity.id,
+                  let date = kickboardEntity.date,
                   let brandEntity = kickboardEntity.brand,
                   let brandTitle = brandEntity.title,
                   let brandImageName = brandEntity.imageName
@@ -74,6 +75,7 @@ final class RideHistoryRepository: RideHistoryRepositoryProtocol {
                 longitude: kickboardEntity.longitude,
                 battery: Int(kickboardEntity.battery),
                 isAvailable: kickboardEntity.isAvailable,
+                date: date,
                 brand: brand
             )
 

@@ -51,6 +51,7 @@ extension RegisterViewController: KickboardSettingViewDelegate {
             longitude: longitude,
             battery: battery,
             isAvailable: true,
+            date: Date(),
             brand: brand
         )
         viewModel.action?(.saveKickboard(kickboard))

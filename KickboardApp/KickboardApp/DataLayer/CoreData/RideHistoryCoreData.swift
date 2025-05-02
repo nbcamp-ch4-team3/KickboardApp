@@ -21,7 +21,7 @@ final class RideHistoryCoreData: RideHistoryCoreDataProtocol {
 
     func saveData(user: UserEntity, kickboard: KickboardEntity, with rideHistory: RideHistory) throws {
         let object = RideHistoryEntity(context: viewContext)
-        object.id = kickboard.id
+        object.id = UUID()
         object.startTime = rideHistory.startTime
         object.endTime = rideHistory.endTime
         object.price = Int64(rideHistory.price)
@@ -36,7 +36,6 @@ final class RideHistoryCoreData: RideHistoryCoreDataProtocol {
     }
 
     func getHistory(user: UserEntity) throws -> [RideHistoryEntity] {
-        allHistory()
         let fetchRequst = RideHistoryEntity.fetchRequest()
         fetchRequst.predicate = NSPredicate(format: "user == %@", user.objectID)
 
@@ -44,15 +43,6 @@ final class RideHistoryCoreData: RideHistoryCoreDataProtocol {
             return try viewContext.fetch(fetchRequst)
         } catch {
             throw CoreDataError.readError(error)
-        }
-    }
-
-    func allHistory() {
-        do {
-            let result = try viewContext.fetch(RideHistoryEntity.fetchRequest())
-            print(result)
-        } catch {
-            print(error)
         }
     }
 }

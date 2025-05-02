@@ -39,7 +39,6 @@ final class HomeBottomSheetViewController: UIViewController {
 
 extension HomeBottomSheetViewController: HomeBottomSheetViewDelegate {
     func didTapRentButton() {
-        print("didTapRentButton")
         let alert = UIAlertController(
             title: "킥보드를 대여하시겠어요?",
             message: "대여 후 이용 요금이 부과됩니다.\n계속 진행하시겠습니까?",

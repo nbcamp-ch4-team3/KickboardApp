@@ -9,7 +9,7 @@ import Foundation
 
 protocol DetailViewUseCaseProtocol {
     func getHistory() throws -> [RideHistory]
-    func getUseInfo() throws -> [UseInfo]
+    func getRegisteredKickboards() throws -> [Kickboard]
 }
 
 final class DetailViewUseCase: DetailViewUseCaseProtocol {
@@ -32,8 +32,7 @@ final class DetailViewUseCase: DetailViewUseCaseProtocol {
         return try historyRepository.getRideHistory()
     }
     
-    func getUseInfo() throws -> [UseInfo] {
-        return [.init(type: "뭐시기", date: "25.03.02", address: "경기도 수원시 팔달구", model: "1233A")]
-//        return []
+    func getRegisteredKickboards() throws -> [Kickboard] {
+        return try kickboardRepository.getRegisteredKickboards()
     }
 }

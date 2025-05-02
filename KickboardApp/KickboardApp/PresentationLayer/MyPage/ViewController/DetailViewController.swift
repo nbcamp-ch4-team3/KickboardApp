@@ -50,7 +50,7 @@ extension DetailViewController: UITableViewDataSource {
         case .history:
             viewModel.historys.count
         case .kickboard:
-            viewModel.useInfos.count
+            viewModel.registeredKickboards.count
         }
     }
     
@@ -68,7 +68,7 @@ extension DetailViewController: UITableViewDataSource {
             cell.setHistory(viewModel.historys[indexPath.row])
         case .kickboard:
             cell.setType(.kickboard)
-            cell.setUseInfo(viewModel.useInfos[indexPath.row])
+            cell.setRegisteredKickboard(viewModel.registeredKickboards[indexPath.row])
         }
         
         return cell
@@ -91,7 +91,7 @@ extension DetailViewController: DetailViewModelDelegate {
                 rootView.updateBackgroundView(false, .history)
             }
         case .kickboard:
-            if viewModel.useInfos.isEmpty {
+            if viewModel.registeredKickboards.isEmpty {
                 rootView.updateBackgroundView(true, .kickboard)
             } else {
                 rootView.updateBackgroundView(false, .kickboard)

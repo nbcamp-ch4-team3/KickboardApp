@@ -102,7 +102,7 @@ private extension InfoCardCell {
             $0.text = pageType?.firstInfoTitle
             $0.font = .font(.pretendardRegular, ofSize: 15)
             $0.textColor = .black
-            $0.numberOfLines = 1
+            $0.numberOfLines = 0
         }
         
         firstInfoLabel.do {
@@ -249,12 +249,27 @@ extension InfoCardCell {
         modelLabel.text = String(history.kickboard.id.uuidString.prefix(8))
     }
     
-    func setUseInfo(_ useInfo: UseInfo) {
-        typeLabel.text = useInfo.type
-        dateLabel.text = useInfo.date
-        firstInfoLabel.text = useInfo.address
-        modelLabel.text = useInfo.model
+    func setRegisteredKickboard(_ kickboard: Kickboard) {
+        typeLabel.text = kickboard.brand.title
+        dateLabel.text = kickboard.date.toShortDateString()
+
+        let manager = AddressManager()
+        Task {
+            let address = try? await manager.fetchAddress(lat: kickboard.latitude, lng: kickboard.longitude)
+            await MainActor.run {
+                firstInfoLabel.text = address
+            }
+        }
+
+        modelLabel.text = String(kickboard.id.uuidString.prefix(8))
         secondInfoTitleLabel.isHidden = true
         secondInfoLabel.isHidden = true
+
+//        typeLabel.text = useInfo.type
+//        dateLabel.text = useInfo.date
+//        firstInfoLabel.text = useInfo.address
+//        modelLabel.text = useInfo.model
+//        secondInfoTitleLabel.isHidden = true
+//        secondInfoLabel.isHidden = true
     }
  }
