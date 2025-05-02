@@ -27,6 +27,8 @@
     <td align=“center”>검색</td>
     <td align=“center”>대여 및 반납</td>
     <td align=“center”>킥보드 등록</td>
+    <td align="center">킥보드 등록 내역</td>
+    <td align="center">이용 내역</td>
   </tr>
   <tr>
     <td>
@@ -43,6 +45,11 @@
     </td>
     <td>
       <img src="https://github.com/user-attachments/assets/de5e067c-5e68-42eb-91a9-bbc65836842b" width="200">
+    </td>
+    <td>
+      <img src="https://github.com/user-attachments/assets/2942cb8f-f4b5-45c2-a4c4-e85c39513863" width="200">
+    <td>
+      <img src="https://github.com/user-attachments/assets/5735c35a-7f79-4e84-9f27-8d2bfe7b3c9c" width="200">
     </td>
   </tr>
 </table>
