@@ -9,4 +9,5 @@ import Foundation
 
 protocol RideHistoryRepositoryProtocol {
     func saveRideHistory(with rideHistory: RideHistory) throws
+    func getRideHistory() throws -> [RideHistory]
 }

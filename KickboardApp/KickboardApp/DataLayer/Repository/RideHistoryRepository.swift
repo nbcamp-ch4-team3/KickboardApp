@@ -37,4 +37,52 @@ final class RideHistoryRepository: RideHistoryRepositoryProtocol {
             with: rideHistory
         )
     }
+
+    func getRideHistory() throws -> [RideHistory] {
+        guard let userEntity = try userCoreData.findUser() else {
+            throw CoreDataError.notFound("User")
+        }
+
+        let historyEntity = try rideHistoryCoreData.getHistory(user: userEntity)
+
+        return historyEntity.compactMap { entity -> RideHistory? in
+            guard let kickboardEntity = entity.kickboard,
+                  let startTime = entity.startTime,
+                  let endTime = entity.endTime
+            else {
+                return nil
+            }
+
+            guard let kickboardId = kickboardEntity.id,
+                  let brandEntity = kickboardEntity.brand,
+                  let brandTitle = brandEntity.title,
+                  let brandImageName = brandEntity.imageName
+            else {
+                return nil
+            }
+
+            let brand = Brand(
+                title: brandTitle,
+                imageName: brandImageName,
+                distancePerBatteryUnit: brandEntity.distancePerBatteryUnit,
+                pricePerMinute: Int(brandEntity.pricePerMinute)
+            )
+
+            let kickboard = Kickboard(
+                id: kickboardId,
+                latitude: kickboardEntity.latitude,
+                longitude: kickboardEntity.longitude,
+                battery: Int(kickboardEntity.battery),
+                isAvailable: kickboardEntity.isAvailable,
+                brand: brand
+            )
+
+            return RideHistory(
+                kickboard: kickboard,
+                startTime: startTime,
+                endTime: endTime,
+                price: Int(entity.price)
+            )
+        }
+    }
 }

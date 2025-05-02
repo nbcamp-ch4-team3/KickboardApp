@@ -63,7 +63,7 @@ private extension InfoCardCell {
         }
         
         typeTitleLabel.do {
-            $0.text = "브렌드 : "
+            $0.text = "브랜드 : "
             $0.font = .font(.pretendardRegular, ofSize: 15)
             $0.textColor = .black
             $0.numberOfLines = 1
@@ -240,12 +240,13 @@ extension InfoCardCell {
         secondInfoTitleLabel.text = type.secondInfoTitle
     }
     
-    func setHistory(_ history: History) {
-        typeLabel.text = history.type
-        dateLabel.text = history.date
-        firstInfoLabel.text = history.time
-        secondInfoLabel.text = history.amount
-        modelLabel.text = history.model
+    func setHistory(_ history: RideHistory) {
+        typeLabel.text = history.kickboard.brand.title
+
+        dateLabel.text = history.endTime.toShortDateString()
+        firstInfoLabel.text = "\(history.startTime.toTimeString()) ~ \(history.endTime.toTimeString())"
+        secondInfoLabel.text = history.price.toPriceString()
+        modelLabel.text = String(history.kickboard.id.uuidString.prefix(8))
     }
     
     func setUseInfo(_ useInfo: UseInfo) {

@@ -17,7 +17,7 @@ final class DetailViewModel: ViewModelProtocol {
         case getInfo
     }
     
-    private(set) var historys: [History] = []
+    private(set) var historys: [RideHistory] = []
     private(set) var useInfos: [UseInfo] = []
     private(set) var pageType: PageType
     private let useCase: DetailViewUseCaseProtocol
