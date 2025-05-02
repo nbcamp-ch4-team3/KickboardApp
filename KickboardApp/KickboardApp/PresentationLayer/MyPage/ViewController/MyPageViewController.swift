@@ -41,7 +41,7 @@ final class MyPageViewController: UIViewController {
 
 extension MyPageViewController: ListCellViewDelegate {
     func listCellViewDidTap(_ type: ListType) {
-        let pageType: PageType
+        let pageType: PageType?
         
         switch type {
         case .history:
@@ -49,16 +49,28 @@ extension MyPageViewController: ListCellViewDelegate {
         case .kickboard:
             pageType = .kickboard
         case .logout:
-            return
+            pageType = nil
+            
+            self.showLogoutAlert {
+                LogInManager.shared.deleteLogInInfo()
+                
+                if let sceneDelegate = UIApplication.shared.connectedScenes
+                    .first(where: { $0.activationState == .foregroundActive })?
+                    .delegate as? SceneDelegate {
+                    sceneDelegate.updateRootViewController()
+                }                
+            }
         }
         
-        let vc = DetailViewController(
-            viewModel: .init(
-                pageType: pageType,
-                useCase: DIContainer.shared.makeDetailUseCase()
+        if let pageType = pageType {
+            let vc = DetailViewController(
+                viewModel: .init(
+                    pageType: pageType,
+                    useCase: DIContainer.shared.makeDetailUseCase()
+                )
             )
-        )
-        self.navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
 
