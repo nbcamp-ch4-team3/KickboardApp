@@ -20,11 +20,10 @@ final class MyPageUseCase: MyPageUseCaseProtocol {
     }
     
     func getUserInfo() throws -> User {
-//        return try userRepository.readMyUserInfo()
-        return .init(id: "", password: "", nickname: "최안용")
+        return try userRepository.readMyUserInfo()
     }
     
     func getIsUsedkickboard() throws -> Bool {
-        return true
+        return UserDefaults.standard.bool(forKey: UserDefaultsKey.isRiding.rawValue)
     }
 }
