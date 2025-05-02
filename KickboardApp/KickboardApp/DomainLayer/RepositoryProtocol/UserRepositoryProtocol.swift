@@ -12,4 +12,5 @@ protocol UserRepositoryProtocol {
     func isExistUser(_ id: String) throws -> Bool
     func validatePassword(_ password: String, for id: String) throws -> Bool
     func saveUserInfo(_ user: User) throws
+    func isUsedKickboard() throws -> Bool
 }

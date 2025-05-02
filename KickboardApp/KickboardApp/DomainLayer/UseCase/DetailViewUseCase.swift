@@ -8,30 +8,31 @@
 import Foundation
 
 protocol DetailViewUseCaseProtocol {
-    func getHistory() throws -> [History]
-    func getUseInfo() throws -> [UseInfo]
+    func getHistory() throws -> [RideHistory]
+    func getRegisteredKickboards() throws -> [Kickboard]
 }
 
 final class DetailViewUseCase: DetailViewUseCaseProtocol {
     private let kickboardRepository: KickboardRepositoryProtocol
+    private let historyRepository: RideHistoryRepositoryProtocol
     private let userRepository: UserRepositoryProtocol
     private let addressManager = AddressManager()
     
     init(
         kickboardRepository: KickboardRepositoryProtocol,
-        userRepository: UserRepositoryProtocol
+        userRepository: UserRepositoryProtocol,
+        historyRepository: RideHistoryRepositoryProtocol
     ) {
         self.kickboardRepository = kickboardRepository
         self.userRepository = userRepository
+        self.historyRepository = historyRepository
     }
     
-    func getHistory() throws -> [History] {
-        return [.init(type: "뭐시기", date: "25.03.02", time: "13:32 ~ 15:11", amount: "31,230원", model: "1233A")]
-//        return []
+    func getHistory() throws -> [RideHistory] {
+        return try historyRepository.getRideHistory()
     }
     
-    func getUseInfo() throws -> [UseInfo] {
-        return [.init(type: "뭐시기", date: "25.03.02", address: "경기도 수원시 팔달구", model: "1233A")]
-//        return []
+    func getRegisteredKickboards() throws -> [Kickboard] {
+        return try kickboardRepository.getRegisteredKickboards()
     }
 }

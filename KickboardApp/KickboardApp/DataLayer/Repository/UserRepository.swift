@@ -8,6 +8,7 @@
 import Foundation
 
 final class UserRepository: UserRepositoryProtocol {
+
     private let coreData: UserCoreDataProtocol
 
     init(coreData: UserCoreDataProtocol) {
@@ -36,6 +37,10 @@ final class UserRepository: UserRepositoryProtocol {
     
     func saveUserInfo(_ user: User) throws {
         try coreData.saveUser(user)
+    }
+
+    func isUsedKickboard() throws -> Bool {
+        UserDefaults.standard.bool(forKey: UserDefaultsKey.isRiding.rawValue)
     }
 }
 

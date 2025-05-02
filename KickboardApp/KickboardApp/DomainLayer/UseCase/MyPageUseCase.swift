@@ -9,7 +9,7 @@ import Foundation
 
 protocol MyPageUseCaseProtocol {
     func getUserInfo() throws -> User
-    func getIsUsedkickboard() throws -> Bool
+    func isUsedKickboard() throws -> Bool
 }
 
 final class MyPageUseCase: MyPageUseCaseProtocol {
@@ -23,7 +23,7 @@ final class MyPageUseCase: MyPageUseCaseProtocol {
         return try userRepository.readMyUserInfo()
     }
     
-    func getIsUsedkickboard() throws -> Bool {
-        return UserDefaults.standard.bool(forKey: UserDefaultsKey.isRiding.rawValue)
+    func isUsedKickboard() throws -> Bool {
+        return try userRepository.isUsedKickboard()
     }
 }

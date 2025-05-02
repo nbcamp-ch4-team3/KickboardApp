@@ -29,9 +29,13 @@ final class MyPageViewController: UIViewController {
         setNavigationBar()
         viewModel.delegate = self
         viewModel.action?(.getUserInfo)
-        viewModel.action?(.getIsUsed)
     }
-    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.action?(.isUsed)
+    }
+
     private func setNavigationBar() {
         let backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: self, action: nil)
         backBarButtonItem.tintColor = .black

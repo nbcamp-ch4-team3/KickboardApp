@@ -15,7 +15,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         window = UIWindow(windowScene: windowScene)
 
-//        LogInManager.shared.deleteLogInInfo()
         LogInManager.shared.loadLogInInfo()
         let isLoggedIn = LogInManager.shared.isLoggedIn
         if isLoggedIn {

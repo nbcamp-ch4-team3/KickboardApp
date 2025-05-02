@@ -9,6 +9,7 @@ import CoreData
 
 protocol RideHistoryCoreDataProtocol {
     func saveData(user: UserEntity, kickboard: KickboardEntity, with rideHistory: RideHistory) throws
+    func getHistory(user: UserEntity) throws -> [RideHistoryEntity]
 }
 
 final class RideHistoryCoreData: RideHistoryCoreDataProtocol {
@@ -20,16 +21,28 @@ final class RideHistoryCoreData: RideHistoryCoreDataProtocol {
 
     func saveData(user: UserEntity, kickboard: KickboardEntity, with rideHistory: RideHistory) throws {
         let object = RideHistoryEntity(context: viewContext)
-        object.id = kickboard.id
+        object.id = UUID()
         object.startTime = rideHistory.startTime
         object.endTime = rideHistory.endTime
         object.price = Int64(rideHistory.price)
         object.user = user
+        object.kickboard = kickboard
 
         do {
             try viewContext.save()
         } catch {
             throw CoreDataError.saveError(error)
+        }
+    }
+
+    func getHistory(user: UserEntity) throws -> [RideHistoryEntity] {
+        let fetchRequst = RideHistoryEntity.fetchRequest()
+        fetchRequst.predicate = NSPredicate(format: "user == %@", user.objectID)
+
+        do {
+            return try viewContext.fetch(fetchRequst)
+        } catch {
+            throw CoreDataError.readError(error)
         }
     }
 }

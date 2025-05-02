@@ -17,8 +17,8 @@ final class DetailViewModel: ViewModelProtocol {
         case getInfo
     }
     
-    private(set) var historys: [History] = []
-    private(set) var useInfos: [UseInfo] = []
+    private(set) var historys: [RideHistory] = []
+    private(set) var registeredKickboards: [Kickboard] = []
     private(set) var pageType: PageType
     private let useCase: DetailViewUseCaseProtocol
     weak var delegate: DetailViewModelDelegate?
@@ -47,8 +47,8 @@ final class DetailViewModel: ViewModelProtocol {
                 historys = result
                 delegate?.getInfo()
             case .kickboard:
-                let result = try useCase.getUseInfo()
-                useInfos = result
+                let result = try useCase.getRegisteredKickboards()
+                registeredKickboards = result
                 delegate?.getInfo()
             }
         } catch {

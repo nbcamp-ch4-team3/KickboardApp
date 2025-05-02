@@ -16,7 +16,7 @@ protocol MyPageViewModelDelegate: AnyObject {
 final class MyPageViewModel: ViewModelProtocol {
     enum Action {
         case getUserInfo
-        case getIsUsed
+        case isUsed
     }
     
     private let useCase: MyPageUseCaseProtocol
@@ -30,8 +30,8 @@ final class MyPageViewModel: ViewModelProtocol {
             switch action {
             case .getUserInfo:
                 self?.getUserInfo()
-            case .getIsUsed:
-                self?.getIsUsed()
+            case .isUsed:
+                self?.isUsed()
             }
         }
     }
@@ -45,9 +45,9 @@ final class MyPageViewModel: ViewModelProtocol {
         }
     }
     
-    private func getIsUsed() {
+    private func isUsed() {
         do {
-            let result = try useCase.getIsUsedkickboard()
+            let result = try useCase.isUsedKickboard()
             delegate?.didUpdateIsUsed(result)
         } catch {
             delegate?.didFailWithError(AppError(error))

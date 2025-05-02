@@ -13,9 +13,11 @@ protocol KickboardCoreDataProtocol {
     func updateLocation(id: UUID, latitude: Double, longitude: Double) throws
     func deleteAllData() throws
     func findKickboard(with id: UUID) throws -> KickboardEntity?
+    func readResgisteredData(user: UserEntity) throws -> [KickboardEntity]
 }
 
 final class KickboardCoreData: KickboardCoreDataProtocol {
+
     private let viewContext: NSManagedObjectContext
 
     init() {
@@ -29,6 +31,7 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
         object.isAvailable = data.isAvailable
         object.latitude = data.latitude
         object.longitude = data.longitude
+        object.date = data.date
         object.brand = brand
         object.user = user
 
@@ -68,6 +71,17 @@ final class KickboardCoreData: KickboardCoreDataProtocol {
         let fetchRequest = KickboardEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         return try viewContext.fetch(fetchRequest).first
+    }
+
+    func readResgisteredData(user: UserEntity) throws -> [KickboardEntity] {
+        let fetchRequest = KickboardEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "user == %@", user.objectID)
+
+        do {
+            return try viewContext.fetch(fetchRequest)
+        } catch {
+            throw CoreDataError.readError(error)
+        }
     }
 }
 

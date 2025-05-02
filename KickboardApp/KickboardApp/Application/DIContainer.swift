@@ -93,7 +93,8 @@ final class DIContainer {
     func makeDetailUseCase() -> DetailViewUseCase {
         let useCase = DetailViewUseCase(
             kickboardRepository: kickboardRepository,
-            userRepository: userRepository
+            userRepository: userRepository,
+            historyRepository: rideHistoryRepository
         )
         return useCase
     }
